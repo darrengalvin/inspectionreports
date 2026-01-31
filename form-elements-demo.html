@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Format Options — Interactive Reference</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #1a1a1a;
+            --ink-light: #525252;
+            --ink-muted: #737373;
+            --border: #e5e5e5;
+            --surface: #fafafa;
+            --white: #ffffff;
+            --green: #16a34a;
+            --green-bg: #f0fdf4;
+            --amber: #d97706;
+            --amber-bg: #fffbeb;
+            --red: #dc2626;
+            --red-bg: #fef2f2;
+            --blue: #2563eb;
+            --blue-bg: #eff6ff;
+            --purple: #7c3aed;
+            --purple-bg: #f5f3ff;
+            --orange: #ea580c;
+            --orange-bg: #fff7ed;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--surface);
+            color: var(--ink);
+            line-height: 1.6;
+            font-size: 15px;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .page {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 48px 40px;
+        }
+        
+        /* Header */
+        .header {
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            color: var(--ink-muted);
+            font-size: 15px;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--blue);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* Format Card */
+        .format-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .format-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .format-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--ink-muted);
+            margin-bottom: 4px;
+        }
+        
+        .format-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .format-desc {
+            font-size: 13px;
+            color: var(--ink-muted);
+        }
+        
+        .format-tag {
+            font-size: 11px;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        
+        .format-tag.quantitative { background: var(--blue-bg); color: var(--blue); }
+        .format-tag.single { background: var(--purple-bg); color: var(--purple); }
+        .format-tag.multi { background: var(--orange-bg); color: var(--orange); }
+        .format-tag.text { background: var(--green-bg); color: var(--green); }
+        .format-tag.binary { background: var(--purple-bg); color: var(--purple); }
+        .format-tag.scale { background: var(--blue-bg); color: var(--blue); }
+        .format-tag.evidence { background: var(--green-bg); color: var(--green); }
+        
+        /* Demo Area */
+        .demo-area {
+            background: var(--surface);
+            border-radius: 8px;
+            padding: 24px;
+        }
+        
+        .demo-question {
+            font-weight: 500;
+            color: var(--ink);
+            margin-bottom: 16px;
+        }
+        
+        /* Slider */
+        .slider-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .slider-value {
+            font-size: 32px;
+            font-weight: 700;
+        }
+        
+        .slider-label {
+            font-size: 13px;
+            font-weight: 500;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+        
+        .slider-label.good { background: var(--green-bg); color: var(--green); }
+        .slider-label.moderate { background: var(--amber-bg); color: var(--amber); }
+        .slider-label.poor { background: var(--red-bg); color: var(--red); }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            background: #e5e5e5;
+            border-radius: 4px;
+            appearance: none;
+            cursor: pointer;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--ink);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--ink-muted);
+            margin-top: 8px;
+        }
+        
+        /* Dropdown */
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            background: var(--white);
+            color: var(--ink);
+            cursor: pointer;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: var(--ink);
+        }
+        
+        /* Text Input */
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            background: var(--white);
+            color: var(--ink);
+        }
+        
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--ink);
+        }
+        
+        input::placeholder {
+            color: var(--ink-muted);
+        }
+        
+        /* Textarea */
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            background: var(--white);
+            color: var(--ink);
+            resize: none;
+            font-family: inherit;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: var(--ink);
+        }
+        
+        .char-count {
+            font-size: 12px;
+            color: var(--ink-muted);
+            margin-top: 8px;
+        }
+        
+        /* Radio/Checkbox Options */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--white);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        
+        .option-item:hover {
+            border-color: var(--ink-muted);
+        }
+        
+        .option-item.selected {
+            background: var(--ink);
+            border-color: var(--ink);
+            color: var(--white);
+        }
+        
+        .option-indicator {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .option-indicator.checkbox {
+            border-radius: 4px;
+        }
+        
+        .option-item.selected .option-indicator {
+            border-color: var(--white);
+        }
+        
+        .option-indicator-inner {
+            width: 8px;
+            height: 8px;
+            background: var(--white);
+            border-radius: 50%;
+            display: none;
+        }
+        
+        .option-item.selected .option-indicator-inner {
+            display: block;
+        }
+        
+        .option-label {
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        /* Toggle */
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .toggle-switch {
+            width: 52px;
+            height: 28px;
+            background: #d1d5db;
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .toggle-switch.active {
+            background: var(--green);
+        }
+        
+        .toggle-knob {
+            width: 22px;
+            height: 22px;
+            background: var(--white);
+            border-radius: 50%;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        
+        .toggle-switch.active .toggle-knob {
+            transform: translateX(24px);
+        }
+        
+        .toggle-status {
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+        
+        .toggle-status.yes { color: var(--green); }
+        .toggle-status.no { color: var(--ink-muted); }
+        
+        /* Button Group */
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .button-option {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--white);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: center;
+        }
+        
+        .button-option:hover {
+            border-color: var(--ink-muted);
+        }
+        
+        .button-option.selected.green { background: var(--green); border-color: var(--green); color: white; }
+        .button-option.selected.red { background: var(--red); border-color: var(--red); color: white; }
+        .button-option.selected.amber { background: var(--amber); border-color: var(--amber); color: white; }
+        .button-option.selected.neutral { background: var(--ink-muted); border-color: var(--ink-muted); color: white; }
+        
+        /* Likert */
+        .likert-scale {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .likert-option {
+            flex: 1;
+            padding: 16px 8px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--white);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.15s ease;
+        }
+        
+        .likert-option:hover {
+            border-color: var(--ink-muted);
+        }
+        
+        .likert-option.selected {
+            background: var(--ink);
+            border-color: var(--ink);
+            color: white;
+        }
+        
+        .likert-number {
+            font-size: 18px;
+            font-weight: 600;
+            display: block;
+        }
+        
+        .likert-label {
+            font-size: 10px;
+            opacity: 0.7;
+            display: block;
+            margin-top: 4px;
+        }
+        
+        .likert-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--ink-muted);
+            margin-top: 8px;
+        }
+        
+        /* Star Rating */
+        .star-rating {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .star {
+            font-size: 32px;
+            cursor: pointer;
+            color: #d1d5db;
+            transition: transform 0.1s ease;
+        }
+        
+        .star:hover {
+            transform: scale(1.1);
+        }
+        
+        .star.filled {
+            color: #fbbf24;
+        }
+        
+        .rating-text {
+            font-size: 14px;
+            color: var(--ink-muted);
+            margin-top: 8px;
+        }
+        
+        /* Number Input */
+        .number-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .number-row input {
+            width: 100px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .number-row span {
+            color: var(--ink-muted);
+        }
+        
+        /* Segmented Control */
+        .segmented-control {
+            display: inline-flex;
+            background: #e5e5e5;
+            border-radius: 8px;
+            padding: 4px;
+        }
+        
+        .segment {
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--ink-light);
+            transition: all 0.15s ease;
+        }
+        
+        .segment:hover {
+            color: var(--ink);
+        }
+        
+        .segment.selected {
+            background: var(--white);
+            color: var(--ink);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        /* Multi Slider */
+        .multi-slider-item {
+            margin-bottom: 20px;
+        }
+        
+        .multi-slider-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .multi-slider-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .multi-slider-label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .multi-slider-value {
+            font-weight: 600;
+        }
+        
+        .multi-slider-value.good { color: var(--green); }
+        .multi-slider-value.moderate { color: var(--amber); }
+        .multi-slider-value.poor { color: var(--red); }
+        
+        /* Quote Capture */
+        .quote-inputs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .quote-inputs input {
+            width: 120px;
+        }
+        
+        .quote-inputs select {
+            flex: 1;
+        }
+        
+        .quote-textarea {
+            font-style: italic;
+        }
+        
+        .add-quote-btn {
+            padding: 10px 20px;
+            background: var(--ink);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+        
+        .add-quote-btn:hover {
+            background: #333;
+        }
+        
+        /* Summary Box */
+        .summary-box {
+            background: var(--ink);
+            color: white;
+            border-radius: 12px;
+            padding: 32px;
+            margin-top: 40px;
+        }
+        
+        .summary-box h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        
+        .summary-col h3 {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 12px;
+        }
+        
+        .summary-col ul {
+            list-style: none;
+        }
+        
+        .summary-col li {
+            font-size: 13px;
+            padding: 4px 0;
+            opacity: 0.9;
+        }
+        
+        .footer-note {
+            text-align: center;
+            color: var(--ink-muted);
+            font-size: 14px;
+            margin-top: 32px;
+            line-height: 1.6;
+        }
+        
+        /* Selection count */
+        .selection-count {
+            font-size: 12px;
+            color: var(--ink-muted);
+            margin-top: 12px;
+        }
+        
+        @media (max-width: 768px) {
+            .page { padding: 32px 20px; }
+            .options-grid { grid-template-columns: 1fr; }
+            .button-group { flex-wrap: wrap; }
+            .likert-scale { flex-wrap: wrap; }
+            .summary-grid { grid-template-columns: 1fr; gap: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        
+        <a href="index.html" class="back-link">← Back to Proposal</a>
+        
+        <header class="header">
+            <h1>Question Format Options</h1>
+            <p>Interactive reference for all available input types. Click and interact with each to see how they work.</p>
+        </header>
+        
+        <!-- Format 1: Slider -->
+        <div class="format-card">
+            <div class="format-header">
+                <div>
+                    <div class="format-label">Format 1</div>
+                    <div class="format-title">Slider (1-10 Scale)</div>
+                    <div class="format-desc">Best for: Ratings, scores, satisfaction levels</div>
+                </div>
+                <span class="format-tag quantitative">Quantitative</span>
+            </div>
+            <div class="demo-area">
+                <p class="demo-question">On a scale of 1-10, how supported do you feel here?</p>
+                <div class="slider-display">
+                    <span class="slider-value" id="slider1-value">5</span>
+                    <span class="slider-label moderate" id="slider1-label">Moderate</span>
+                </div>
+                <input type="range" min="1" max="10" value="5" id="slider1" oninput="updateSlider1()">
+                <div class="slider-labels">
+                    <span>1 - Very Poor</span>
+                    <span>5 - Average</span>
+                    <span>10 - Excellent</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Format 2: Dropdown -->
+        <div class="format-card">
+            <div class="format-header">
+                <div>
+                    <div class="format-label">Format 2</div>
+                    <div class="format-title">Dropdown Select</div>
+                    <div class="format-desc">Best for: Single choice from many options</div>
+                </div>
+                <span class="format-tag single">Single Choice</span>
+            </div>
+            <div class="demo-area">
+                <p class="demo-question">How often are staff meant to check in with you?</p>
+                <select>
+                    <option value="">Select frequency...</option>
+                    <option value="daily">Daily</option>
+                    <option value="multiple">Multiple times per week</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="fortnightly">Fortnightly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="on-call">On-call only</option>
+                    <option value="24-7">24/7 on-site</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Format 3: Text Input -->
+        <div class="format-card">
+            <div class="format-header">
+                <div>
+                    <div class="format-label">Format 3</div>
+                    <div class="format-title">Short Text Input</div>
+                    <div class="format-desc">Best for: Names, brief answers, specific details</div>
+                </div>
+                <span class="format-tag text">Free Text</span>
+            </div>
+            <div class="demo-area">
+                <p class="demo-question">Who is your key worker? (name/role)</p>
+                <input type="text" placeholder="Enter name or role...">
+            </div>
+        </div>
+        
+        <!-- Format 4: Textarea -->
+        <div class="format-card">
+            <div class="format-header">
+                <div>
+                    <div class="format-label">Format 4</div>
+                    <div class="format-title">Long Text (Textarea)</div>
+                    <div class="format-desc">Best for: Detailed responses, notes, quotes</div>
+                </div>
+                <span class="format-tag text">Free Text</span>
+            </div>
+            <div class="demo-area">
+                <p class="demo-question">Tell me about the last time you needed help quickly — what happened?</p>
+                <textarea rows="4" placeholder="Record the resident's response..." id="textarea1" oninput="updateCharCount()"></textarea>
+                <div class="char-count"><span id="char-count">0</span> characters</div>
+            </div>
+        </div>
+        
+        <!-- Format 5: Radio Buttons -->
+        <div class="format-card">
+            <div class="format-header">
+                <div>
+                    <div class="format-label">Format 5</div>
+                    <div class="format-title">Radio Buttons</div>
+                    <div class="format-desc">Best for: Single choice from few options (visible)</div>
+                </div>
+                <span class="format-tag single">Single Choice</span>
+            </div>
+            <div class="demo-area">
+                <p class="demo-question">Do staff come when they say they will?</p>
+                <div class="options-list" id="radio-options">
+                    <div class="option-item" onclick="selectRadio(this, 'radio-options')">
+                        <div class="option-indicator"><div class="option-indicator-inner"></div></div>
+                        <span class="option-label">Always</span>
+                    </div>
+                    <div class="option-item" onclick="selectRadio(this, 'radio-options')">
+                        <div class="option-indicator"><div class="option-indicator-inner"></div></div>
+                        <span class="option-label">Usually</span>
+                    </div>
+                    <div class="option-item" onclick="selectRadio(this, 'radio-options')">
+                        <div class="option-indicator"><div class="option-indicator-inner"></div></div>
+                        <span class="option-label">Sometimes</span>
+                    </div>
+                    <div class="option-item" onclick="selectRadio(this, 'radio-options')">
+                        <div class="option-indicator"><div class="option-indicator-inner"></div></div>
+                        <span class="option-label">Rarely</span>
+                    </div>
+                    <div class="option-item" onclick="selectRadio(this, 'radio-options')">
+                        <div class="option-indicator"><div class="option-indicator-inner"></div></div>
+                        <span class="option-label">Never</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Format 6: Checkboxes -->
+        <div class="format-card">
+            <div class="format-header">
+                <div>
+                    <div class="format-label">Format 6</div>
+                    <div class="format-title">Checkboxes (Multi-select)</div>
+                    <div class="format-desc">Best for: Multiple selections allowed</div>
+                </div>
+                <span class="format-tag multi">Multi Choice</span>
+            </div>
+            <div class="demo-area">
+                <p class="demo-question">What do staff help you with day to day? (select all that apply)</p>
+                <div class="options-grid" id="checkbox-options">
+                    <div class="option-item" onclick="toggleCheckbox(this)">
+                        <div class="option-indicator checkbox"></div>
+                        <span class="option-label">Cooking/nutrition</span>
+                    </div>
+                    <div class="option-item" onclick="toggleCheckbox(this)">
+                        <div class="option-indicator checkbox"></div>
+                        <span class="option-label">Cleaning/laundry</span>
+                    </div>
+                    <div class="option-item" onclick="toggleCheckbox(this)">
+                        <div class="option-indicator checkbox"></div>
+                        <span class="option-label">Shopping</span>
+                    </div>
+                    <div class="option-item" onclick="toggleCheckbox(this)">
+                        <div class="option-indicator checkbox"></div>
+                        <span class="option-label">Appointments</span>
+                    </div>
+                    <div class="option-item" onclick="toggleCheckbox(this)">
+                        <div class="option-indicator checkbox"></div>
+                        <span class="option-label">Forms/benefits</span>
+                    </div>
+                    <div class="option-item" onclick="toggleCheckbox(this)">
+                        <div class="option-indicator checkbox"></div>
+                        <span class="option-label">Budgeting</span>
+                    </div>
+                    <div class="option-item" onclick="toggleCheckbox(this)">
+                        <div class="option-indicator checkbox"></div>
+                        <span class="option-label">Medication</span>
+                    </div>
+                    <div class="option-item" onclick="toggleCheckbox(this)">
+                        <div class="option-indicator checkbox"></div>
+                        <span class="option-label">Emotional support</span>
+                    </div>
+                </div>
+                <div class="selection-count"><span id="checkbox-count">0</span> selected</div>
+            </div>
+        </div>
+        
+        <!-- Format 7: Toggle -->
+        <div class="format-card">
+            <div class="format-header">
+                <div>
+                    <div class="format-label">Format 7</div>
+                    <div class="format-title">Toggle Switch</div>
+                    <div class="format-desc">Best for: Yes/No, True/False questions</div>
+                </div>
+                <span class="format-tag binary">Binary</span>
+            </div>
+            <div class="demo-area">
+                <div class="toggle-row">
+                    <p class="demo-question" style="margin-bottom: 0;">Do you have a written support plan?</p>
+                    <div class="toggle-switch" id="toggle1" onclick="toggleSwitch('toggle1')">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+                <div class="toggle-status no" id="toggle1-status">No</div>
+            </div>
+        </div>
+        
+        <!-- Format 8: Yes/No/Unsure -->
+        <div class="format-card">
+            <div class="format-header">
+                <div>
+                    <div class="format-label">Format 8</div>
+                    <div class="format-title">Yes / No / Unsure Buttons</div>
+                    <div class="format-desc">Best for: Quick categorical responses with neutral option</div>
+                </div>
+                <span class="format-tag single">Single Choice</span>
+            </div>
+            <div class="demo-area">
+                <p class="demo-question">Do you feel safe where you live?</p>
+                <div class="button-group" id="yesno-group">
+                    <button class="button-option" onclick="selectButton(this, 'yesno-group', 'green')">Yes</button>
+                    <button class="button-option" onclick="selectButton(this, 'yesno-group', 'red')">No</button>
+                    <button class="button-option" onclick="selectButton(this, 'yesno-group', 'amber')">Sometimes</button>
+                    <button class="button-option" onclick="selectButton(this, 'yesno-group', 'neutral')">Unsure</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Format 9: Likert -->
+        <div class="format-card">
+            <div class="format-header">
+                <div>
+                    <div class="format-label">Format 9</div>
+                    <div class="format-title">Likert Scale</div>
+                    <div class="format-desc">Best for: Agreement/disagreement statements</div>
+                </div>
+                <span class="format-tag scale">Scale</span>
+            </div>
+            <div class="demo-area">
+                <p class="demo-question">"Staff speak to me with respect."</p>
+                <div class="likert-scale" id="likert-group">
+                    <div class="likert-option" onclick="selectLikert(this)">
+                        <span class="likert-number">1</span>
+                        <span class="likert-label">SD</span>
+                    </div>
+                    <div class="likert-option" onclick="selectLikert(this)">
+                        <span class="likert-number">2</span>
+                        <span class="likert-label">D</span>
+                    </div>
+                    <div class="likert-option" onclick="selectLikert(this)">
+                        <span class="likert-number">3</span>
+                        <span class="likert-label">N</span>
+                    </div>
+                    <div class="likert-option" onclick="selectLikert(this)">
+                        <span class="likert-number">4</span>
+                        <span class="likert-label">A</span>
+                    </div>
+                    <div class="likert-option" onclick="selectLikert(this)">
+                        <span class="likert-number">5</span>
+                        <span class="likert-label">SA</span>
+                    </div>
+                </div>
+                <div class="likert-labels">
+                    <span>Strongly Disagree</span>
+                    <span>Strongly Agree</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Format 10: Star Rating -->
+        <div class="format-card">
+            <div class="format-header">
+                <div>
+                    <div class="format-label">Format 10</div>
+                    <div class="format-title">Star Rating</div>
+                    <div class="format-desc">Best for: Quick visual ratings (1-5)</div>
+                </div>
+                <span class="format-tag quantitative">Quantitative</span>
+            </div>
+            <div class="demo-area">
+                <p class="demo-question">Rate the quality of communication from staff:</p>
+                <div class="star-rating" id="star-rating">
+                    <span class="star" onclick="setRating(1)">☆</span>
+                    <span class="star" onclick="setRating(2)">☆</span>
+                    <span class="star" onclick="setRating(3)">☆</span>
+                    <span class="star" onclick="setRating(4)">☆</span>
+                    <span class="star" onclick="setRating(5)">☆</span>
+                </div>
+                <div class="rating-text" id="rating-text">Not rated</div>
+            </div>
+        </div>
+        
+        <!-- Format 11: Number Input -->
+        <div class="format-card">
+            <div class="format-header">
+                <div>
+                    <div class="format-label">Format 11</div>
+                    <div class="format-title">Number Input</div>
+                    <div class="format-desc">Best for: Counts, frequencies, quantities</div>
+                </div>
+                <span class="format-tag quantitative">Quantitative</span>
+            </div>
+            <div class="demo-area">
+                <p class="demo-question">Over the last month, how many times has support not happened as planned?</p>
+                <div class="number-row">
+                    <input type="number" min="0" placeholder="0">
+                    <span>times</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Format 12: Segmented Control -->
+        <div class="format-card">
+            <div class="format-header">
+                <div>
+                    <div class="format-label">Format 12</div>
+                    <div class="format-title">Segmented Control</div>
+                    <div class="format-desc">Best for: Quick selection from 3-5 options</div>
+                </div>
+                <span class="format-tag single">Single Choice</span>
+            </div>
+            <div class="demo-area">
+                <p class="demo-question">How often do visits get cancelled?</p>
+                <div class="segmented-control" id="segmented-group">
+                    <div class="segment" onclick="selectSegment(this)">Never</div>
+                    <div class="segment" onclick="selectSegment(this)">Rarely</div>
+                    <div class="segment" onclick="selectSegment(this)">Sometimes</div>
+                    <div class="segment" onclick="selectSegment(this)">Often</div>
+                    <div class="segment" onclick="selectSegment(this)">Always</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Format 13: Multi-dimension -->
+        <div class="format-card">
+            <div class="format-header">
+                <div>
+                    <div class="format-label">Format 13</div>
+                    <div class="format-title">Multi-dimension Rating</div>
+                    <div class="format-desc">Best for: Rating multiple aspects at once</div>
+                </div>
+                <span class="format-tag scale">Multi-scale</span>
+            </div>
+            <div class="demo-area">
+                <p class="demo-question">Rate the following aspects of support:</p>
+                
+                <div class="multi-slider-item">
+                    <div class="multi-slider-header">
+                        <span class="multi-slider-label">Reliability</span>
+                        <span class="multi-slider-value moderate" id="multi1-value">5/10</span>
+                    </div>
+                    <input type="range" min="1" max="10" value="5" id="multi1" oninput="updateMultiSlider('multi1')">
+                </div>
+                
+                <div class="multi-slider-item">
+                    <div class="multi-slider-header">
+                        <span class="multi-slider-label">Respect & Dignity</span>
+                        <span class="multi-slider-value moderate" id="multi2-value">5/10</span>
+                    </div>
+                    <input type="range" min="1" max="10" value="5" id="multi2" oninput="updateMultiSlider('multi2')">
+                </div>
+                
+                <div class="multi-slider-item">
+                    <div class="multi-slider-header">
+                        <span class="multi-slider-label">Safety</span>
+                        <span class="multi-slider-value moderate" id="multi3-value">5/10</span>
+                    </div>
+                    <input type="range" min="1" max="10" value="5" id="multi3" oninput="updateMultiSlider('multi3')">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Format 14: Quote Capture -->
+        <div class="format-card">
+            <div class="format-header">
+                <div>
+                    <div class="format-label">Format 14</div>
+                    <div class="format-title">Quote Capture</div>
+                    <div class="format-desc">Best for: Recording direct resident quotes with sentiment</div>
+                </div>
+                <span class="format-tag evidence">Evidence</span>
+            </div>
+            <div class="demo-area">
+                <p class="demo-question">Capture a direct quote from the resident:</p>
+                <div class="quote-inputs">
+                    <input type="text" placeholder="Resident ID (A, B, C)">
+                    <select>
+                        <option value="">Sentiment...</option>
+                        <option value="positive">✓ Positive</option>
+                        <option value="concern">⚠ Concern</option>
+                        <option value="neutral">○ Neutral</option>
+                    </select>
+                </div>
+                <textarea class="quote-textarea" rows="3" placeholder="Type the exact quote..."></textarea>
+                <button class="add-quote-btn">+ Add Quote</button>
+            </div>
+        </div>
+        
+        <!-- Summary -->
+        <div class="summary-box">
+            <h2>Format Summary</h2>
+            <div class="summary-grid">
+                <div class="summary-col">
+                    <h3>Quantitative</h3>
+                    <ul>
+                        <li>• Slider (1-10)</li>
+                        <li>• Star Rating</li>
+                        <li>• Number Input</li>
+                        <li>• Multi-dimension</li>
+                    </ul>
+                </div>
+                <div class="summary-col">
+                    <h3>Single Choice</h3>
+                    <ul>
+                        <li>• Dropdown</li>
+                        <li>• Radio Buttons</li>
+                        <li>• Toggle (Yes/No)</li>
+                        <li>• Segmented Control</li>
+                        <li>• Likert Scale</li>
+                    </ul>
+                </div>
+                <div class="summary-col">
+                    <h3>Free Form</h3>
+                    <ul>
+                        <li>• Short Text</li>
+                        <li>• Long Text</li>
+                        <li>• Quote Capture</li>
+                        <li>• Multi-select</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <p class="footer-note">
+            Each question in the inspection can use any of these formats.<br>
+            The format is configured per-question in the section data.
+        </p>
+        
+    </div>
+    
+    <script>
+        // Slider 1
+        function updateSlider1() {
+            const slider = document.getElementById('slider1');
+            const value = document.getElementById('slider1-value');
+            const label = document.getElementById('slider1-label');
+            
+            value.textContent = slider.value;
+            
+            if (slider.value >= 7) {
+                label.textContent = 'Good';
+                label.className = 'slider-label good';
+            } else if (slider.value >= 4) {
+                label.textContent = 'Moderate';
+                label.className = 'slider-label moderate';
+            } else {
+                label.textContent = 'Poor';
+                label.className = 'slider-label poor';
+            }
+        }
+        
+        // Char count
+        function updateCharCount() {
+            const textarea = document.getElementById('textarea1');
+            document.getElementById('char-count').textContent = textarea.value.length;
+        }
+        
+        // Radio
+        function selectRadio(el, groupId) {
+            document.querySelectorAll('#' + groupId + ' .option-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            el.classList.add('selected');
+        }
+        
+        // Checkbox
+        function toggleCheckbox(el) {
+            el.classList.toggle('selected');
+            updateCheckboxCount();
+        }
+        
+        function updateCheckboxCount() {
+            const count = document.querySelectorAll('#checkbox-options .option-item.selected').length;
+            document.getElementById('checkbox-count').textContent = count;
+        }
+        
+        // Toggle
+        function toggleSwitch(id) {
+            const toggle = document.getElementById(id);
+            const status = document.getElementById(id + '-status');
+            
+            toggle.classList.toggle('active');
+            
+            if (toggle.classList.contains('active')) {
+                status.textContent = 'Yes';
+                status.className = 'toggle-status yes';
+            } else {
+                status.textContent = 'No';
+                status.className = 'toggle-status no';
+            }
+        }
+        
+        // Button group
+        function selectButton(el, groupId, color) {
+            document.querySelectorAll('#' + groupId + ' .button-option').forEach(btn => {
+                btn.classList.remove('selected', 'green', 'red', 'amber', 'neutral');
+            });
+            el.classList.add('selected', color);
+        }
+        
+        // Likert
+        function selectLikert(el) {
+            document.querySelectorAll('#likert-group .likert-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            el.classList.add('selected');
+        }
+        
+        // Star rating
+        let currentRating = 0;
+        function setRating(rating) {
+            currentRating = rating;
+            const stars = document.querySelectorAll('#star-rating .star');
+            stars.forEach((star, idx) => {
+                if (idx < rating) {
+                    star.textContent = '★';
+                    star.classList.add('filled');
+                } else {
+                    star.textContent = '☆';
+                    star.classList.remove('filled');
+                }
+            });
+            document.getElementById('rating-text').textContent = rating + ' out of 5';
+        }
+        
+        // Segmented
+        function selectSegment(el) {
+            document.querySelectorAll('#segmented-group .segment').forEach(seg => {
+                seg.classList.remove('selected');
+            });
+            el.classList.add('selected');
+        }
+        
+        // Multi slider
+        function updateMultiSlider(id) {
+            const slider = document.getElementById(id);
+            const valueEl = document.getElementById(id + '-value');
+            const val = parseInt(slider.value);
+            
+            valueEl.textContent = val + '/10';
+            
+            valueEl.classList.remove('good', 'moderate', 'poor');
+            if (val >= 7) {
+                valueEl.classList.add('good');
+            } else if (val >= 4) {
+                valueEl.classList.add('moderate');
+            } else {
+                valueEl.classList.add('poor');
+            }
+        }
+    </script>
+</body>
+</html>

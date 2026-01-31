@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supported Housing Inspection App — Project Proposal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #1a1a1a;
+            --ink-light: #525252;
+            --ink-muted: #737373;
+            --border: #e5e5e5;
+            --surface: #fafafa;
+            --white: #ffffff;
+            --green: #16a34a;
+            --green-bg: #f0fdf4;
+            --amber: #d97706;
+            --amber-bg: #fffbeb;
+            --blue: #2563eb;
+            --blue-bg: #eff6ff;
+            --purple: #7c3aed;
+            --purple-bg: #f5f3ff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--white);
+            color: var(--ink);
+            line-height: 1.7;
+            font-size: 15px;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .page {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+        
+        /* Header */
+        .header {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 40px;
+            margin-bottom: 48px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .header .subtitle {
+            color: var(--ink-muted);
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .header .date {
+            font-size: 13px;
+            color: var(--ink-muted);
+        }
+        
+        /* Section */
+        .section {
+            margin-bottom: 48px;
+            padding-bottom: 48px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .section:last-of-type {
+            border-bottom: none;
+        }
+        
+        .section-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--ink-muted);
+            margin-bottom: 8px;
+        }
+        
+        .section h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            letter-spacing: -0.3px;
+        }
+        
+        .section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            margin-top: 28px;
+        }
+        
+        .section h3:first-of-type {
+            margin-top: 0;
+        }
+        
+        .section p {
+            color: var(--ink-light);
+            margin-bottom: 16px;
+        }
+        
+        /* Quote Block */
+        .quote-block {
+            background: var(--surface);
+            border-left: 4px solid var(--purple);
+            padding: 24px 28px;
+            margin: 32px 0;
+            font-size: 18px;
+            font-style: italic;
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        
+        .quote-block .attribution {
+            font-size: 13px;
+            font-style: normal;
+            color: var(--ink-muted);
+            margin-top: 12px;
+        }
+        
+        /* Highlight Box */
+        .highlight-box {
+            background: var(--blue-bg);
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+        
+        .highlight-box.green {
+            background: var(--green-bg);
+            border-color: #bbf7d0;
+        }
+        
+        .highlight-box.purple {
+            background: var(--purple-bg);
+            border-color: #ddd6fe;
+        }
+        
+        .highlight-box.amber {
+            background: var(--amber-bg);
+            border-color: #fde68a;
+        }
+        
+        .highlight-box h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--ink);
+        }
+        
+        .highlight-box p {
+            color: var(--ink-light);
+            margin-bottom: 0;
+            font-size: 14px;
+        }
+        
+        /* Link Cards */
+        .link-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 24px 0;
+        }
+        
+        .link-card {
+            border: 2px solid var(--blue);
+            border-radius: 12px;
+            padding: 28px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+            background: linear-gradient(135deg, var(--blue-bg) 0%, var(--white) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .link-card::before {
+            content: '→';
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            font-size: 24px;
+            color: var(--blue);
+            transition: transform 0.2s ease;
+        }
+        
+        .link-card:hover {
+            border-color: var(--blue);
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.2);
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, #dbeafe 0%, var(--white) 100%);
+        }
+        
+        .link-card:hover::before {
+            transform: translateX(4px);
+        }
+        
+        .link-card .card-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--white);
+            background: var(--blue);
+            padding: 4px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .link-card h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--ink);
+        }
+        
+        .link-card p {
+            font-size: 14px;
+            color: var(--ink-light);
+            margin-bottom: 0;
+            line-height: 1.5;
+        }
+        
+        .link-card .click-hint {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--blue);
+        }
+        
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            margin: 20px 0;
+        }
+        
+        .checklist li {
+            padding: 12px 0;
+            padding-left: 32px;
+            position: relative;
+            border-bottom: 1px solid var(--border);
+            color: var(--ink-light);
+        }
+        
+        .checklist li:last-child {
+            border-bottom: none;
+        }
+        
+        .checklist li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--green);
+            font-weight: 600;
+        }
+        
+        /* Pricing */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin: 24px 0;
+        }
+        
+        .pricing-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 28px;
+            text-align: center;
+        }
+        
+        .pricing-card.highlight {
+            border-color: var(--green);
+            background: var(--green-bg);
+        }
+        
+        .pricing-card .unit-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--ink-muted);
+            margin-bottom: 4px;
+        }
+        
+        .pricing-card .amount {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+        
+        .pricing-card .includes {
+            font-size: 13px;
+            color: var(--ink-muted);
+            text-align: left;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .pricing-card .includes ul {
+            list-style: none;
+            margin-top: 8px;
+        }
+        
+        .pricing-card .includes li {
+            padding: 4px 0;
+            padding-left: 20px;
+            position: relative;
+            color: var(--ink-light);
+        }
+        
+        .pricing-card .includes li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--ink-muted);
+        }
+        
+        .total-box {
+            background: var(--surface);
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            margin-top: 24px;
+        }
+        
+        .total-box .label {
+            font-size: 13px;
+            color: var(--ink-muted);
+            margin-bottom: 4px;
+        }
+        
+        .total-box .amount {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--green);
+        }
+        
+        /* Process Steps */
+        .process-steps {
+            margin: 24px 0;
+        }
+        
+        .step {
+            display: grid;
+            grid-template-columns: 40px 1fr;
+            gap: 16px;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .step:last-child {
+            border-bottom: none;
+        }
+        
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: var(--surface);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--ink-muted);
+        }
+        
+        .step-content h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .step-content p {
+            font-size: 14px;
+            color: var(--ink-muted);
+            margin-bottom: 0;
+        }
+        
+        /* Form Types Demo */
+        .form-types {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 24px 0;
+        }
+        
+        .form-type {
+            background: var(--surface);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .form-type .icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .form-type .name {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .form-type .desc {
+            font-size: 11px;
+            color: var(--ink-muted);
+        }
+        
+        /* Important Note */
+        .important-note {
+            background: var(--amber-bg);
+            border: 1px solid #fde68a;
+            border-radius: 8px;
+            padding: 20px 24px;
+            margin: 24px 0;
+        }
+        
+        .important-note h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--amber);
+            margin-bottom: 8px;
+        }
+        
+        .important-note p {
+            font-size: 14px;
+            color: var(--ink-light);
+            margin-bottom: 0;
+        }
+        
+        /* Footer */
+        .footer {
+            margin-top: 64px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 13px;
+            color: var(--ink-muted);
+        }
+        
+        /* Recap List */
+        .recap-list {
+            background: var(--surface);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+        
+        .recap-list h4 {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--ink-muted);
+            margin-bottom: 16px;
+        }
+        
+        .recap-list ul {
+            list-style: none;
+        }
+        
+        .recap-list li {
+            padding: 10px 0;
+            padding-left: 24px;
+            position: relative;
+            border-bottom: 1px solid var(--border);
+            color: var(--ink-light);
+            font-size: 14px;
+        }
+        
+        .recap-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .recap-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--blue);
+        }
+        
+        @media (max-width: 768px) {
+            .page { padding: 40px 24px; }
+            .link-cards { grid-template-columns: 1fr; }
+            .pricing-grid { grid-template-columns: 1fr; }
+            .form-types { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        
+        <!-- Header -->
+        <header class="header">
+            <h1>Supported Housing Inspection App</h1>
+            <p class="subtitle">Project Proposal & Architecture Overview</p>
+            <p class="date">Prepared: 31 January 2026</p>
+        </header>
+        
+        <!-- Intro Section -->
+        <div class="section">
+            <div class="section-label">Working Together</div>
+            <h2>Before We Begin</h2>
+            
+            <p>
+                Dave, thank you for taking the time to discuss your project. I wanted to put together this page to 
+                recap our conversation, demonstrate what I was explaining, and give you something tangible 
+                to consider as you make your decision.
+            </p>
+            
+            <p>
+                I know you have concerns about sharing your idea. That's completely understandable. But I want 
+                to address that directly, because it's important we start from a place of trust.
+            </p>
+            
+            <div class="quote-block">
+                "The graveyard is the richest place on earth, because it is here that you will find all the hopes 
+                and dreams that were never fulfilled, the books that were never written, the songs that were never 
+                sung, the inventions that were never shared, the cures that were never discovered."
+                <div class="attribution">— Les Brown</div>
+            </div>
+            
+            <p>
+                Here's the reality: you can't trademark an app idea. NDAs, while they feel reassuring, aren't 
+                worth the paper they're written on in practice. You're never going to sue someone, and proving 
+                they stole your idea is nearly impossible. Ideas are everywhere. What matters is <strong>execution</strong>.
+            </p>
+            
+            <p>
+                And execution comes down to finding the right person to work with. Someone who gives more than they 
+                take. Someone who hears your idea and helps you expand it, explore it, challenge it. Someone who brings 
+                industry knowledge and experience to make it better. That's the person you need. It doesn't have 
+                to be me, but it does need to be someone you trust.
+            </p>
+            
+            <div class="highlight-box green">
+                <h4>My Approach</h4>
+                <p>
+                    I give a little before I ask for anything. This page, and everything you'll see linked below, 
+                    is me demonstrating value upfront so you can see what working with me looks like before 
+                    making any commitment.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Recap Section -->
+        <div class="section">
+            <div class="section-label">Our Conversation</div>
+            <h2>What We Discussed</h2>
+            
+            <div class="recap-list">
+                <h4>Key Points Covered</h4>
+                <ul>
+                    <li>Your concern about protecting the idea (addressed above, it's about execution not secrecy)</li>
+                    <li>The importance of building the app around question formats, not just a list of questions</li>
+                    <li>You don't want long, wordy reports. I've heard you, and I've demonstrated that below</li>
+                    <li>The questionnaire should be intuitive for inspectors to complete</li>
+                    <li>The report output needs to be professional and actionable</li>
+                    <li>You want something that stands out from generic inspection tools</li>
+                </ul>
+            </div>
+            
+            <h3>The Smart Approach I Mentioned</h3>
+            
+            <p>
+                Rather than just having a developer ask "what questions do you want?" and typing them into a form 
+                builder, we build the application around the <em>format</em> of each question. This means:
+            </p>
+            
+            <div class="form-types">
+                <div class="form-type">
+                    <div class="icon">○</div>
+                    <div class="name">Radio Buttons</div>
+                    <div class="desc">Single choice from options</div>
+                </div>
+                <div class="form-type">
+                    <div class="icon">☐</div>
+                    <div class="name">Checkboxes</div>
+                    <div class="desc">Multiple selections allowed</div>
+                </div>
+                <div class="form-type">
+                    <div class="icon">▼</div>
+                    <div class="name">Dropdowns</div>
+                    <div class="desc">Select from a list</div>
+                </div>
+                <div class="form-type">
+                    <div class="icon">123</div>
+                    <div class="name">Number Inputs</div>
+                    <div class="desc">Counts, scores, quantities</div>
+                </div>
+                <div class="form-type">
+                    <div class="icon">Aa</div>
+                    <div class="name">Text Fields</div>
+                    <div class="desc">Free-form responses</div>
+                </div>
+                <div class="form-type">
+                    <div class="icon">★</div>
+                    <div class="name">Rating Scales</div>
+                    <div class="desc">1-10, Good/Bad, etc.</div>
+                </div>
+            </div>
+            
+            <p>
+                I've built an interactive demo so you can see exactly what I mean. Click around, explore the 
+                options — this is what I was describing on our call.
+            </p>
+        </div>
+        
+        <!-- Live Demos Section -->
+        <div class="section">
+            <div class="section-label">Interactive Demos</div>
+            <h2>See What I'm Talking About</h2>
+            
+            <p>
+                Below are working examples of the architecture concepts. These aren't final designs. They're 
+                prototypes to help you visualise the approach and provide feedback.
+            </p>
+            
+            <a href="form-elements-demo.html" class="link-card" style="display: block; max-width: 100%;">
+                <div class="card-label">Interactive Demo</div>
+                <h4>Form Elements Reference</h4>
+                <p>Interactive examples of every input type we discussed: radio buttons, checkboxes, scales, and more. Click around, try them out. Your homework is to think about which formats suit your questions.</p>
+                <div class="click-hint">Click to explore →</div>
+            </a>
+            
+            <div class="highlight-box">
+                <h4>Your Homework</h4>
+                <p>
+                    Explore the form elements demo and start thinking about what questions you want to ask during 
+                    inspections. Don't worry about wording yet. Just think about what information you need to 
+                    capture and what format makes sense (yes/no, rating, free text, etc.).
+                </p>
+            </div>
+        </div>
+        
+        <!-- Report Section -->
+        <div class="section">
+            <div class="section-label">Making Sure We're On The Same Page</div>
+            <h2>The Report Format</h2>
+            
+            <p>
+                You specifically mentioned you didn't want reports that are walls of text. I've taken that on 
+                board completely, and I've put together a sample report so we can make sure we're aligned on 
+                what you're looking for.
+            </p>
+            
+            <p>
+                The example focuses on:
+            </p>
+            
+            <ul class="checklist">
+                <li>Visual scoring that's immediately scannable</li>
+                <li>Key findings in brief, clear statements</li>
+                <li>Direct quotes from residents as evidence</li>
+                <li>Actionable items with clear priorities</li>
+                <li>Professional layout that prints well</li>
+            </ul>
+            
+            <a href="supported-housing-inspection-report.html" class="link-card" style="display: block; max-width: 100%; margin: 24px 0;">
+                <div class="card-label">Sample Report</div>
+                <h4>View the Example Report</h4>
+                <p>See how inspection findings could be presented. Clean, scannable, professional. Have a look and let me know if this is the direction you had in mind.</p>
+                <div class="click-hint">Click to view →</div>
+            </a>
+            
+            <div class="important-note">
+                <h4>Important: This is Architecture, Not a Finished Product</h4>
+                <p>
+                    Everything you see here is prototype work to demonstrate the concept and get your feedback. 
+                    The actual application would need user authentication, a proper database, data security, 
+                    multiple user roles, PDF export, and more. This is the foundation we'd build upon.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Pricing Section -->
+        <div class="section">
+            <div class="section-label">Investment</div>
+            <h2>How I Work</h2>
+            
+            <p>
+                I work in what I call "units". Each unit is £2,500 and represents a defined chunk of work. 
+                For this project, I'm estimating <strong>2 units</strong>, which gives us flexibility while 
+                keeping the scope manageable.
+            </p>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="unit-label">Unit 1</div>
+                    <div class="amount">£2,500</div>
+                    <div class="includes">
+                        <strong>Covers:</strong>
+                        <ul>
+                            <li>Full application architecture</li>
+                            <li>Question/section builder system</li>
+                            <li>Inspector questionnaire interface</li>
+                            <li>Data storage & structure</li>
+                            <li>Initial deployment</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="pricing-card">
+                    <div class="unit-label">Unit 2</div>
+                    <div class="amount">£2,500</div>
+                    <div class="includes">
+                        <strong>Covers:</strong>
+                        <ul>
+                            <li>Report generation system</li>
+                            <li>PDF export functionality</li>
+                            <li>User authentication & roles</li>
+                            <li>Polish & refinements</li>
+                            <li>Final deployment & handover</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="total-box">
+                <div class="label">Total Project Investment</div>
+                <div class="amount">£5,000</div>
+            </div>
+            
+            <h3>Why Units Work</h3>
+            
+            <p>
+                The unit system means we're not quibbling over every small request. If something fits within 
+                the unit, it's included. We agree upfront what each unit covers, and there are no surprise invoices 
+                for "an extra 2 hours because the button needed moving". It keeps things simple and collaborative.
+            </p>
+            
+            <h3>Payment Structure</h3>
+            
+            <div class="process-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>I Give First</h4>
+                        <p>Before you pay anything, I deliver demonstrable value (like this page). You can see my work before committing.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>Unit 1 Payment</h4>
+                        <p>Once you're ready to proceed, payment for Unit 1 (£2,500) is made upfront. Work begins immediately.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Unit 1 Delivery</h4>
+                        <p>I deliver everything in Unit 1. You review, we refine, you're happy.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Unit 2 Payment</h4>
+                        <p>Payment for Unit 2 (£2,500) is made. Final phase of work begins.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h4>Completion & Handover</h4>
+                        <p>Full application delivered, deployed, and handed over to you with documentation.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="highlight-box purple">
+                <h4>Why Upfront Payment?</h4>
+                <p>
+                    I take payment upfront for all projects because it creates mutual commitment. You're invested 
+                    in the project succeeding, and so am I. But I always give first — so you know exactly what 
+                    you're getting before any money changes hands.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Next Steps Section -->
+        <div class="section">
+            <div class="section-label">Moving Forward</div>
+            <h2>What Happens Next</h2>
+            
+            <p>
+                Have a look through everything here. Explore the demos. Check out the report format.
+            </p>
+            
+            <p>
+                If you like what you see, and you can see this working, then I'm ready to get cracking on 
+                this straight away. We could have this built and in your hands within a few weeks.
+            </p>
+            
+            <div class="highlight-box green" style="text-align: center; padding: 32px;">
+                <h4 style="font-size: 18px; margin-bottom: 12px;">Ready When You Are</h4>
+                <p style="font-size: 16px; margin-bottom: 16px;">
+                    If there's synergy here and you want to make this happen, just say the word.<br>
+                    I'm ready. Let's build it.
+                </p>
+            </div>
+            
+            <p>
+                When you're ready, we can have a quick call to:
+            </p>
+            
+            <ul class="checklist">
+                <li>Nail down your specific inspection sections and questions</li>
+                <li>Confirm the report format is what you're after</li>
+                <li>Agree the scope for each unit</li>
+                <li>Set a timeline and get moving</li>
+            </ul>
+            
+            <p>
+                No pressure, no hard sell. But if you're in, I'm in. Let's make it happen.
+            </p>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <p>This document was prepared specifically for you, Dave.</p>
+            <p style="margin-top: 8px;">Let's make it happen.</p>
+        </footer>
+        
+    </div>
+</body>
+</html>

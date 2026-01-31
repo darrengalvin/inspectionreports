@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inspection Report — Maple House</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #1a1a1a;
+            --ink-light: #525252;
+            --ink-muted: #737373;
+            --border: #e5e5e5;
+            --surface: #fafafa;
+            --white: #ffffff;
+            --green: #16a34a;
+            --green-bg: #f0fdf4;
+            --amber: #d97706;
+            --amber-bg: #fffbeb;
+            --red: #dc2626;
+            --red-bg: #fef2f2;
+            --blue: #2563eb;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--white);
+            color: var(--ink);
+            line-height: 1.6;
+            font-size: 15px;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .page {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+        
+        /* Header */
+        .header {
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 40px;
+            margin-bottom: 48px;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+        
+        .header .subtitle {
+            color: var(--ink-muted);
+            font-size: 14px;
+        }
+        
+        .header-meta {
+            text-align: right;
+            font-size: 13px;
+            color: var(--ink-light);
+        }
+        
+        .header-meta strong {
+            color: var(--ink);
+        }
+        
+        /* Overall Assessment */
+        .assessment {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 48px;
+            margin-bottom: 64px;
+        }
+        
+        .score-block {
+            text-align: center;
+            padding: 32px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+        
+        .score-number {
+            font-size: 64px;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -2px;
+        }
+        
+        .score-number.amber { color: var(--amber); }
+        .score-number.red { color: var(--red); }
+        .score-number.green { color: var(--green); }
+        
+        .score-label {
+            font-size: 13px;
+            color: var(--ink-muted);
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .score-verdict {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .assessment-summary h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .assessment-summary p {
+            color: var(--ink-light);
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+        
+        .verdict-breakdown {
+            display: flex;
+            gap: 24px;
+            margin-top: 24px;
+        }
+        
+        .verdict-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .verdict-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .verdict-dot.green { background: var(--green); }
+        .verdict-dot.amber { background: var(--amber); }
+        .verdict-dot.red { background: var(--red); }
+        
+        /* Section */
+        .section {
+            margin-bottom: 48px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 48px;
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .section-number {
+            font-size: 12px;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .section-rating {
+            text-align: right;
+        }
+        
+        .rating-score {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .rating-score.green { color: var(--green); }
+        .rating-score.amber { color: var(--amber); }
+        .rating-score.red { color: var(--red); }
+        
+        .rating-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 3px 8px;
+            border-radius: 3px;
+            margin-top: 4px;
+            display: inline-block;
+        }
+        
+        .rating-label.green { background: var(--green-bg); color: var(--green); }
+        .rating-label.amber { background: var(--amber-bg); color: var(--amber); }
+        .rating-label.red { background: var(--red-bg); color: var(--red); }
+        
+        /* Evidence Grid */
+        .evidence-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        
+        .evidence-block {
+            padding: 20px;
+            border-radius: 6px;
+            background: var(--surface);
+        }
+        
+        .evidence-block h4 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--ink-muted);
+            margin-bottom: 12px;
+        }
+        
+        .evidence-list {
+            list-style: none;
+        }
+        
+        .evidence-list li {
+            font-size: 14px;
+            color: var(--ink-light);
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .evidence-list li:last-child {
+            border-bottom: none;
+        }
+        
+        /* Quotes */
+        .quotes-block {
+            margin-top: 20px;
+        }
+        
+        .quote {
+            padding: 16px 20px;
+            background: var(--surface);
+            border-left: 3px solid var(--border);
+            margin-bottom: 12px;
+            font-size: 14px;
+            font-style: italic;
+            color: var(--ink-light);
+        }
+        
+        .quote.concern {
+            border-left-color: var(--red);
+            background: var(--red-bg);
+        }
+        
+        .quote.positive {
+            border-left-color: var(--green);
+            background: var(--green-bg);
+        }
+        
+        .quote-source {
+            font-size: 12px;
+            color: var(--ink-muted);
+            font-style: normal;
+            margin-top: 8px;
+        }
+        
+        /* Findings Summary */
+        .findings-summary {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+        
+        .findings-summary h4 {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .findings-summary p {
+            font-size: 14px;
+            color: var(--ink-light);
+        }
+        
+        /* Breakdown Table */
+        .breakdown-table {
+            width: 100%;
+            font-size: 14px;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+        
+        .breakdown-table th {
+            text-align: left;
+            font-weight: 500;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            color: var(--ink-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .breakdown-table td {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        
+        .breakdown-table td:first-child {
+            color: var(--ink);
+            font-weight: 500;
+            width: 35%;
+        }
+        
+        .breakdown-table td:last-child {
+            color: var(--ink-light);
+        }
+        
+        /* Status Indicator */
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .status::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .status.good::before { background: var(--green); }
+        .status.concern::before { background: var(--amber); }
+        .status.poor::before { background: var(--red); }
+        
+        /* Actions */
+        .actions-section {
+            background: var(--red-bg);
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 32px;
+            margin: 48px 0;
+        }
+        
+        .actions-section h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--red);
+        }
+        
+        .action-item {
+            display: grid;
+            grid-template-columns: 60px 1fr 100px;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid #fecaca;
+            align-items: start;
+        }
+        
+        .action-item:last-child {
+            border-bottom: none;
+        }
+        
+        .action-priority {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 8px;
+            border-radius: 3px;
+            text-align: center;
+        }
+        
+        .action-priority.high {
+            background: var(--red);
+            color: white;
+        }
+        
+        .action-priority.medium {
+            background: var(--amber);
+            color: white;
+        }
+        
+        .action-content {
+            font-size: 14px;
+        }
+        
+        .action-content strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        .action-content span {
+            color: var(--ink-muted);
+            font-size: 13px;
+        }
+        
+        .action-deadline {
+            font-size: 12px;
+            color: var(--ink-muted);
+            text-align: right;
+        }
+        
+        /* Summary */
+        .final-summary {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 32px;
+            margin-top: 48px;
+        }
+        
+        .final-summary h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+        
+        .summary-item {
+            text-align: center;
+        }
+        
+        .summary-item .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--ink-muted);
+            margin-bottom: 4px;
+        }
+        
+        .summary-item .value {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .summary-item .value.amber { color: var(--amber); }
+        
+        .final-note {
+            font-size: 14px;
+            color: var(--ink-light);
+            line-height: 1.7;
+        }
+        
+        /* Footer */
+        .footer {
+            margin-top: 64px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--ink-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        /* Print */
+        @media print {
+            .page { padding: 20px; }
+            .section { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top">
+                <div>
+                    <h1>Maple House</h1>
+                    <p class="subtitle">Supported Housing Quality Inspection</p>
+                </div>
+                <div class="header-meta">
+                    <div><strong>Provider:</strong> Care Support Ltd</div>
+                    <div><strong>Date:</strong> 31 January 2026</div>
+                    <div><strong>Residents interviewed:</strong> 8 of 12</div>
+                    <div><strong>Ref:</strong> QA-2026-0131</div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Overall Assessment -->
+        <div class="assessment">
+            <div class="score-block">
+                <div class="score-number amber">5.8</div>
+                <div class="score-label">Overall Score</div>
+                <div class="score-verdict">Requires Improvement</div>
+            </div>
+            <div class="assessment-summary">
+                <h2>Assessment Summary</h2>
+                <p>
+                    This service delivers adequate practical support but fails on reliability, person-centred planning, 
+                    and complaints handling. The most significant concern is that 5 of 8 residents interviewed 
+                    reported fear of raising concerns — this represents a systemic culture issue requiring 
+                    immediate leadership attention.
+                </p>
+                <p>
+                    Positive foundations exist: staff maintain professional boundaries, medication support is safe, 
+                    and residents value the practical help with daily living tasks. Building on these strengths 
+                    while addressing reliability and complaints culture should be the priority.
+                </p>
+                <div class="verdict-breakdown">
+                    <div class="verdict-item">
+                        <span class="verdict-dot green"></span>
+                        <span>4 areas meeting standard</span>
+                    </div>
+                    <div class="verdict-item">
+                        <span class="verdict-dot amber"></span>
+                        <span>7 areas need improvement</span>
+                    </div>
+                    <div class="verdict-item">
+                        <span class="verdict-dot red"></span>
+                        <span>3 areas inadequate</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section 1: Support Understanding -->
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <div class="section-number">Section 1 of 15</div>
+                    <h3 class="section-title">Understanding of Support Offer</h3>
+                </div>
+                <div class="section-rating">
+                    <div class="rating-score green">7/10</div>
+                    <div class="rating-label green">Meeting Standard</div>
+                </div>
+            </div>
+            
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Area</th>
+                        <th>Finding</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>What were you told support would include?</td>
+                        <td>6 of 8 residents could describe their support offer accurately. 2 were unclear on specific hours.</td>
+                    </tr>
+                    <tr>
+                        <td>How often should staff check in?</td>
+                        <td>All residents knew their scheduled visit frequency (daily for 5, 3x weekly for 3).</td>
+                    </tr>
+                    <tr>
+                        <td>If support changed, were you told why?</td>
+                        <td>Mixed. 3 residents reported changes without explanation. 5 said they were informed.</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="quotes-block">
+                <div class="quote positive">
+                    "When I moved in, they sat me down and went through everything. I knew what to expect."
+                    <div class="quote-source">— Resident A</div>
+                </div>
+                <div class="quote concern">
+                    "My hours got cut from daily to three times a week. Nobody asked me, they just told me."
+                    <div class="quote-source">— Resident F</div>
+                </div>
+            </div>
+            
+            <div class="findings-summary">
+                <h4>Why this score?</h4>
+                <p>
+                    Most residents understand their support offer, which is a foundation for the service working. 
+                    However, the 3 residents who experienced changes without consultation indicate a consent issue 
+                    that could escalate. Score reflects good baseline understanding but marks down for unilateral changes.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Section 2: Reliability -->
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <div class="section-number">Section 2 of 15</div>
+                    <h3 class="section-title">Reliability & Consistency of Support</h3>
+                </div>
+                <div class="section-rating">
+                    <div class="rating-score red">3/10</div>
+                    <div class="rating-label red">Inadequate</div>
+                </div>
+            </div>
+            
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Area</th>
+                        <th>Finding</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Do staff come when they say they will?</td>
+                        <td>Only 62% of scheduled visits delivered on time. 38% late or missed entirely.</td>
+                    </tr>
+                    <tr>
+                        <td>If they don't show, are you told?</td>
+                        <td>5 of 8 residents said they receive no notification when visits are cancelled.</td>
+                    </tr>
+                    <tr>
+                        <td>Do visits get rearranged?</td>
+                        <td>Only 2 residents said missed visits are routinely rescheduled. 6 said they are not.</td>
+                    </tr>
+                    <tr>
+                        <td>Do you chase for basic support?</td>
+                        <td>7 of 8 said yes — particularly around appointments and forms.</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="quotes-block">
+                <div class="quote concern">
+                    "Last week they didn't show up Tuesday or Thursday. No call, nothing. I was waiting."
+                    <div class="quote-source">— Resident C</div>
+                </div>
+                <div class="quote concern">
+                    "I had a hospital appointment and needed help getting there. My support worker just didn't turn up. 
+                    I missed the appointment."
+                    <div class="quote-source">— Resident E</div>
+                </div>
+                <div class="quote concern">
+                    "You learn not to rely on them. I plan like they won't come, then I'm not disappointed."
+                    <div class="quote-source">— Resident H</div>
+                </div>
+            </div>
+            
+            <div class="findings-summary">
+                <h4>Why this score?</h4>
+                <p>
+                    This is a fundamental service failure. When 38% of visits don't happen as planned and residents 
+                    aren't notified, the support becomes unpredictable. The resident who missed a hospital appointment 
+                    due to no-show staff represents a concrete harm. The quote "I plan like they won't come" indicates 
+                    residents have adapted to unreliability rather than the service being reliable. This is inadequate.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Section 3: Respect & Dignity -->
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <div class="section-number">Section 3 of 15</div>
+                    <h3 class="section-title">Relationship, Respect & Dignity</h3>
+                </div>
+                <div class="section-rating">
+                    <div class="rating-score amber">6/10</div>
+                    <div class="rating-label amber">Improvement Needed</div>
+                </div>
+            </div>
+            
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Area</th>
+                        <th>Finding</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Do staff speak to you with respect?</td>
+                        <td>6 of 8 said yes. 2 reported occasionally feeling "talked down to."</td>
+                    </tr>
+                    <tr>
+                        <td>Do they listen properly?</td>
+                        <td>Mixed. 4 said staff listen well. 4 said staff seem rushed or distracted.</td>
+                    </tr>
+                    <tr>
+                        <td>Do staff understand what matters to you?</td>
+                        <td>Only 3 of 8 felt staff understood their routines and preferences.</td>
+                    </tr>
+                    <tr>
+                        <td>Do you feel emotionally safe with staff?</td>
+                        <td>5 of 8 said yes. 3 said it depends on who's on shift.</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="quotes-block">
+                <div class="quote positive">
+                    "My key worker gets me. She knows when I'm having a bad day without me saying."
+                    <div class="quote-source">— Resident B</div>
+                </div>
+                <div class="quote concern">
+                    "Some staff are lovely. Others talk to you like you're stupid or a problem to deal with."
+                    <div class="quote-source">— Resident G</div>
+                </div>
+            </div>
+            
+            <div class="findings-summary">
+                <h4>Why this score?</h4>
+                <p>
+                    The inconsistency is the issue. When emotional safety "depends on who's on shift," the service 
+                    is not reliably person-centred. The positive experiences show what's possible, but the negative 
+                    experiences show inadequate training or supervision. Score reflects that most interactions are 
+                    acceptable but consistency is lacking.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Section 4: Choice & Control -->
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <div class="section-number">Section 4 of 15</div>
+                    <h3 class="section-title">Choice, Control & Consent</h3>
+                </div>
+                <div class="section-rating">
+                    <div class="rating-score amber">5/10</div>
+                    <div class="rating-label amber">Improvement Needed</div>
+                </div>
+            </div>
+            
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Area</th>
+                        <th>Finding</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Do you get a say in when support happens?</td>
+                        <td>3 of 8 said yes. 5 said times are set by the service with little flexibility.</td>
+                    </tr>
+                    <tr>
+                        <td>Do staff ask permission before entering?</td>
+                        <td>6 of 8 said staff knock and wait. 2 reported staff entering with just a quick knock.</td>
+                    </tr>
+                    <tr>
+                        <td>Do you have privacy in your home?</td>
+                        <td>7 of 8 felt their privacy was respected.</td>
+                    </tr>
+                    <tr>
+                        <td>Can you say "no" without consequences?</td>
+                        <td>Only 4 of 8 felt confident they could decline support without repercussions.</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="quotes-block">
+                <div class="quote concern">
+                    "The visits happen when they can fit me in. I don't get asked what works for me."
+                    <div class="quote-source">— Resident D</div>
+                </div>
+                <div class="quote concern">
+                    "I said no to something once and it went in my notes as 'refusing to engage.' 
+                    Now I just go along with things."
+                    <div class="quote-source">— Resident F</div>
+                </div>
+            </div>
+            
+            <div class="findings-summary">
+                <h4>Why this score?</h4>
+                <p>
+                    The quote about "refusing to engage" being documented is serious. It suggests a punitive recording 
+                    culture where exercising choice is framed negatively. When half the residents don't feel they can 
+                    say no, that's a consent issue. Privacy is reasonably respected, but autonomy over timing and 
+                    the right to decline are weak.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Section 5: Support Planning -->
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <div class="section-number">Section 5 of 15</div>
+                    <h3 class="section-title">Support Planning</h3>
+                </div>
+                <div class="section-rating">
+                    <div class="rating-score red">4/10</div>
+                    <div class="rating-label red">Inadequate</div>
+                </div>
+            </div>
+            
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Area</th>
+                        <th>Finding</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Do you have a written support plan?</td>
+                        <td>All 8 have plans. Only 3 have seen their plan in the last 6 months.</td>
+                    </tr>
+                    <tr>
+                        <td>Were you involved in making it?</td>
+                        <td>3 of 8 said yes. 5 said plans were written for them, not with them.</td>
+                    </tr>
+                    <tr>
+                        <td>Does it reflect your actual goals?</td>
+                        <td>2 of 8 could name specific goals. 6 said goals are generic or unknown.</td>
+                    </tr>
+                    <tr>
+                        <td>When was your last review?</td>
+                        <td>Average 7 months since last review. 3 residents overdue by 4+ months.</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="quotes-block">
+                <div class="quote concern">
+                    "My support plan says I want to 'engage with support' — what does that even mean? 
+                    That's not a goal, that's just existing here."
+                    <div class="quote-source">— Resident A</div>
+                </div>
+                <div class="quote concern">
+                    "I've never seen my plan. I signed something when I moved in, but that's it."
+                    <div class="quote-source">— Resident H</div>
+                </div>
+            </div>
+            
+            <div class="findings-summary">
+                <h4>Why this score?</h4>
+                <p>
+                    Support plans exist on paper but aren't functioning as person-centred tools. When the most 
+                    common "goal" is to "engage with support," plans are administrative exercises, not meaningful 
+                    documents. The 7-month average since review and residents not seeing their own plans indicates 
+                    a compliance-driven approach rather than genuine planning. This is inadequate.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Section 13: Complaints (moved up due to severity) -->
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <div class="section-number">Section 13 of 15</div>
+                    <h3 class="section-title">Complaints & Raising Concerns</h3>
+                </div>
+                <div class="section-rating">
+                    <div class="rating-score red">3/10</div>
+                    <div class="rating-label red">Inadequate</div>
+                </div>
+            </div>
+            
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Question Area</th>
+                        <th>Finding</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Do you know how to complain?</td>
+                        <td>Only 3 of 8 knew the complaints process. 5 did not.</td>
+                    </tr>
+                    <tr>
+                        <td>Have you complained? What happened?</td>
+                        <td>2 had complained. 1 said issue was resolved. 1 said nothing changed.</td>
+                    </tr>
+                    <tr>
+                        <td>Do you worry complaining could affect your housing?</td>
+                        <td>5 of 8 said yes — this is the critical finding.</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="quotes-block">
+                <div class="quote concern">
+                    "I wouldn't complain. Last person who did got moved to another property. 
+                    Everyone knows that's what happens."
+                    <div class="quote-source">— Resident C</div>
+                </div>
+                <div class="quote concern">
+                    "If you make a fuss, you get labelled as 'difficult.' That goes in your file and 
+                    follows you around. It's not worth it."
+                    <div class="quote-source">— Resident E</div>
+                </div>
+                <div class="quote concern">
+                    "I just keep my head down. I need this place. I can't risk losing it over a complaint."
+                    <div class="quote-source">— Resident G</div>
+                </div>
+            </div>
+            
+            <div class="findings-summary">
+                <h4>Why this score?</h4>
+                <p>
+                    <strong>This is the most serious finding in this inspection.</strong> When 5 of 8 residents 
+                    fear raising concerns, the service cannot self-correct. Problems go unreported. Abuse could 
+                    go unreported. The perception that complaining leads to being moved or labelled "difficult" 
+                    — whether true or not — has created a culture of silence. This is a safeguarding risk and 
+                    requires immediate leadership action.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Remaining sections summary -->
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <div class="section-number">Sections 6–12, 14–15</div>
+                    <h3 class="section-title">Other Areas — Summary</h3>
+                </div>
+            </div>
+            
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Area</th>
+                        <th>Score</th>
+                        <th>Key Finding</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Practical Day-to-Day Support</td>
+                        <td><span class="status good">7/10</span></td>
+                        <td>Good help with cooking, cleaning, appointments. Building skills not just doing for.</td>
+                    </tr>
+                    <tr>
+                        <td>Health & Wellbeing Support</td>
+                        <td><span class="status concern">5/10</span></td>
+                        <td>Crisis response inconsistent. Staff check in after hospital but not always quickly.</td>
+                    </tr>
+                    <tr>
+                        <td>Medication Support</td>
+                        <td><span class="status good">8/10</span></td>
+                        <td>Safe, respectful handling. No errors reported. Clear records.</td>
+                    </tr>
+                    <tr>
+                        <td>Safeguarding & Feeling Safe</td>
+                        <td><span class="status concern">6/10</span></td>
+                        <td>Residents feel physically safe. Concerns not always escalated appropriately.</td>
+                    </tr>
+                    <tr>
+                        <td>Staff Boundaries</td>
+                        <td><span class="status good">8/10</span></td>
+                        <td>Professional conduct maintained. No boundary concerns raised.</td>
+                    </tr>
+                    <tr>
+                        <td>Communication</td>
+                        <td><span class="status concern">5/10</span></td>
+                        <td>Poor notice of staffing changes. Key worker assignments unclear to some.</td>
+                    </tr>
+                    <tr>
+                        <td>Coordination with Services</td>
+                        <td><span class="status concern">6/10</span></td>
+                        <td>Staff attend meetings but preparation with residents is minimal.</td>
+                    </tr>
+                    <tr>
+                        <td>Equality & Adjustments</td>
+                        <td><span class="status good">7/10</span></td>
+                        <td>Reasonable adjustments offered where needed. Communication mostly accessible.</td>
+                    </tr>
+                    <tr>
+                        <td>Outcomes & Impact</td>
+                        <td><span class="status concern">6/10</span></td>
+                        <td>Some improvement in stability. Independence gains limited by inconsistent support.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Actions Required -->
+        <div class="actions-section">
+            <h2>Immediate Actions Required</h2>
+            
+            <div class="action-item">
+                <div class="action-priority high">High</div>
+                <div class="action-content">
+                    <strong>Address complaints culture</strong>
+                    <span>Residents fear consequences for raising concerns. Communicate clearly that complaints will not affect housing. Investigate the "moved after complaining" perception.</span>
+                </div>
+                <div class="action-deadline">Within 7 days</div>
+            </div>
+            
+            <div class="action-item">
+                <div class="action-priority high">High</div>
+                <div class="action-content">
+                    <strong>Implement visit notification system</strong>
+                    <span>When visits are cancelled or delayed, residents must be notified. Currently 5/8 receive no notification.</span>
+                </div>
+                <div class="action-deadline">Within 7 days</div>
+            </div>
+            
+            <div class="action-item">
+                <div class="action-priority high">High</div>
+                <div class="action-content">
+                    <strong>Review and update all support plans</strong>
+                    <span>Plans must be co-produced with residents. Generic goals like "engage with support" are not acceptable.</span>
+                </div>
+                <div class="action-deadline">Within 14 days</div>
+            </div>
+            
+            <div class="action-item">
+                <div class="action-priority medium">Med</div>
+                <div class="action-content">
+                    <strong>Staff training on recording language</strong>
+                    <span>Ensure "refusing to engage" is not used punitively. Resident choice must be respected in records.</span>
+                </div>
+                <div class="action-deadline">Within 21 days</div>
+            </div>
+            
+            <div class="action-item">
+                <div class="action-priority medium">Med</div>
+                <div class="action-content">
+                    <strong>Assign consistent key workers</strong>
+                    <span>4 key workers in 6 months reported by one resident. Reduce staff turnover impact on relationships.</span>
+                </div>
+                <div class="action-deadline">Within 14 days</div>
+            </div>
+        </div>
+        
+        <!-- Final Summary -->
+        <div class="final-summary">
+            <h2>Inspector's Conclusion</h2>
+            
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="label">Overall Rating</div>
+                    <div class="value amber">Requires Improvement</div>
+                </div>
+                <div class="summary-item">
+                    <div class="label">Primary Risk</div>
+                    <div class="value">Complaints Culture</div>
+                </div>
+                <div class="summary-item">
+                    <div class="label">Follow-up Inspection</div>
+                    <div class="value">30 Days</div>
+                </div>
+            </div>
+            
+            <p class="final-note">
+                This service is not failing entirely — there are genuine strengths in medication support, 
+                staff professionalism, and practical daily assistance. However, the combination of unreliable 
+                visits (38% not delivered as planned), weak support planning, and a culture where residents 
+                fear raising concerns means the service cannot currently demonstrate it is safe or effective.
+                <br><br>
+                The complaints culture is particularly concerning. When residents believe raising a concern 
+                could result in being moved or labelled, problems cannot surface. This is a safeguarding risk. 
+                Leadership must act immediately to rebuild trust.
+                <br><br>
+                A follow-up inspection in 30 days will assess progress on the high-priority actions above.
+            </p>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div>Report reference: QA-2026-0131 | Confidential</div>
+            <div>Inspector signature on file</div>
+        </footer>
+        
+    </div>
+</body>
+</html>
