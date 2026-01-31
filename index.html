@@ -502,10 +502,92 @@
         }
         
         @media (max-width: 768px) {
-            .page { padding: 40px 24px; }
-            .link-cards { grid-template-columns: 1fr; }
+            .page { padding: 32px 16px; }
+            
+            .header h1 { font-size: 26px; }
+            .header .subtitle { font-size: 14px; }
+            
+            .section { 
+                margin-bottom: 36px; 
+                padding-bottom: 36px; 
+            }
+            
+            .section h2 { font-size: 20px; }
+            .section h3 { font-size: 15px; }
+            
+            .quote-block {
+                padding: 20px;
+                font-size: 16px;
+            }
+            
+            .link-card { 
+                padding: 20px;
+            }
+            
+            .link-card h4 { font-size: 16px; }
+            
+            .link-card::before {
+                top: 16px;
+                right: 16px;
+                font-size: 20px;
+            }
+            
+            .form-types { 
+                grid-template-columns: repeat(2, 1fr); 
+                gap: 12px;
+            }
+            
+            .form-type {
+                padding: 16px 12px;
+            }
+            
+            .form-type .icon { font-size: 20px; }
+            .form-type .name { font-size: 12px; }
+            .form-type .desc { font-size: 10px; }
+            
             .pricing-grid { grid-template-columns: 1fr; }
-            .form-types { grid-template-columns: 1fr; }
+            
+            .pricing-card {
+                padding: 24px 20px;
+            }
+            
+            .pricing-card .amount { font-size: 32px; }
+            
+            .total-box .amount { font-size: 36px; }
+            
+            .process-steps .step {
+                grid-template-columns: 36px 1fr;
+                gap: 12px;
+            }
+            
+            .step-number {
+                width: 28px;
+                height: 28px;
+                font-size: 13px;
+            }
+            
+            .highlight-box {
+                padding: 20px;
+            }
+            
+            .important-note {
+                padding: 16px 20px;
+            }
+            
+            .recap-list {
+                padding: 20px;
+            }
+            
+            .checklist li {
+                padding: 10px 0;
+                padding-left: 28px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .form-types { 
+                grid-template-columns: repeat(2, 1fr); 
+            }
         }
     </style>
 </head>
