@@ -5,6 +5,7 @@ import { InspectionProvider, useInspection } from './context/InspectionContext';
 import PropertySetup from './components/PropertySetup';
 import Sidebar from './components/Sidebar';
 import SectionQuestionnaire from './components/SectionQuestionnaire';
+import AIAnalysis from './components/AIAnalysis';
 import { inspectionSections } from './data/sections';
 
 function InspectionApp() {
@@ -249,6 +250,7 @@ export default function Home() {
   return (
     <InspectionProvider>
       <InspectionApp />
+      <AIAnalysis />
     </InspectionProvider>
   );
 }
