@@ -48,8 +48,8 @@ function InspectionApp() {
     <div className="flex min-h-screen bg-white">
       <Sidebar onSectionSelect={handleSectionSelect} />
       
-      <main className="flex-1 overflow-y-auto">
-        <div className="max-w-3xl mx-auto p-8 lg:p-12">
+      <main className="flex-1 overflow-y-auto pt-16 lg:pt-0">
+        <div className="max-w-3xl mx-auto p-4 sm:p-8 lg:p-12">
           <SectionQuestionnaire
             section={currentSection}
             onNext={handleNext}
@@ -83,23 +83,23 @@ function ReportPreview({ data, onBack }: { data: any; onBack: () => void }) {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-4xl mx-auto p-8 lg:p-12">
+      <div className="max-w-4xl mx-auto p-4 sm:p-8 lg:p-12">
         {/* Back button */}
         <button
           onClick={onBack}
-          className="mb-8 text-neutral-600 hover:text-neutral-900 text-sm flex items-center gap-2"
+          className="mb-6 sm:mb-8 text-neutral-600 hover:text-neutral-900 text-sm flex items-center gap-2"
         >
           ← Back to questionnaire
         </button>
 
         {/* Header */}
-        <header className="border-b border-neutral-200 pb-8 mb-10">
-          <div className="flex justify-between items-start">
+        <header className="border-b border-neutral-200 pb-6 sm:pb-8 mb-8 sm:mb-10">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
             <div>
-              <h1 className="text-3xl font-semibold text-neutral-900">{data.propertyName}</h1>
-              <p className="text-neutral-600 mt-1">Supported Housing Quality Inspection</p>
+              <h1 className="text-2xl sm:text-3xl font-semibold text-neutral-900">{data.propertyName}</h1>
+              <p className="text-neutral-600 mt-1 text-sm sm:text-base">Supported Housing Quality Inspection</p>
             </div>
-            <div className="text-right text-sm text-neutral-600">
+            <div className="text-left sm:text-right text-sm text-neutral-600">
               <p><strong>Provider:</strong> {data.providerName}</p>
               <p><strong>Date:</strong> {data.date}</p>
               <p><strong>Interviewed:</strong> {data.residentsInterviewed} of {data.totalResidents}</p>
@@ -109,7 +109,7 @@ function ReportPreview({ data, onBack }: { data: any; onBack: () => void }) {
         </header>
 
         {/* Overall Score */}
-        <div className="grid grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8 mb-8 sm:mb-12">
           <div className="text-center p-6 border border-neutral-200 rounded-xl">
             <p className={`text-5xl font-bold ${
               data.overallScore >= 7 ? 'text-green-600' :
@@ -123,9 +123,9 @@ function ReportPreview({ data, onBack }: { data: any; onBack: () => void }) {
             </p>
           </div>
           
-          <div className="col-span-2 p-6 bg-neutral-50 rounded-xl">
+          <div className="sm:col-span-2 p-4 sm:p-6 bg-neutral-50 rounded-xl">
             <h3 className="font-medium text-neutral-900 mb-3">Summary</h3>
-            <div className="flex gap-6">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-6">
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 rounded-full bg-green-500"></span>
                 <span className="text-sm text-neutral-700">{meetingStandard} meeting standard</span>

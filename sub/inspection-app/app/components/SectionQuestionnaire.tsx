@@ -175,7 +175,7 @@ export default function SectionQuestionnaire({ section, onNext, onPrevious, isFi
         )}
 
         <div className="bg-neutral-50 rounded-lg p-4 space-y-3">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <input
               type="text"
               value={newQuote.residentId}
@@ -277,21 +277,21 @@ export default function SectionQuestionnaire({ section, onNext, onPrevious, isFi
       </div>
 
       {/* Navigation */}
-      <div className="flex justify-between pt-6 border-t border-neutral-200">
+      <div className="flex flex-col sm:flex-row gap-3 sm:justify-between pt-6 border-t border-neutral-200">
         <button
           onClick={handlePrevious}
           disabled={isFirst}
-          className="px-6 py-3 border border-neutral-200 text-neutral-700 font-medium rounded-lg
+          className="order-2 sm:order-1 px-6 py-3 border border-neutral-200 text-neutral-700 font-medium rounded-lg
                    hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed
-                   transition-colors"
+                   transition-colors text-sm sm:text-base"
         >
-          Previous Section
+          Previous
         </button>
         
         <button
           onClick={handleNext}
-          className="px-6 py-3 bg-neutral-900 text-white font-medium rounded-lg
-                   hover:bg-neutral-800 transition-colors"
+          className="order-1 sm:order-2 px-6 py-3 bg-neutral-900 text-white font-medium rounded-lg
+                   hover:bg-neutral-800 transition-colors text-sm sm:text-base"
         >
           {isLast ? 'Finish & Generate Report' : 'Next Section'}
         </button>
