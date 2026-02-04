@@ -115,14 +115,13 @@ ${JSON.stringify(questionsData, null, 2)}
 Provide your complete, detailed analysis.`;
 
   try {
-    // Use GPT-5.2 - the latest model with extended thinking capabilities
     const response = await openai.chat.completions.create({
       model: 'gpt-5.2',
       messages: [
         { role: 'user', content: analysisPrompt }
       ],
-      max_tokens: 16000,
-      temperature: 0.7,
+      max_completion_tokens: 16000,
+      reasoning_effort: 'high',
     });
 
     const analysis = response.choices[0]?.message?.content || 'No analysis generated';
@@ -139,7 +138,7 @@ Provide your complete, detailed analysis.`;
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json({ 
       success: false, 
-      error: `API Error: ${errorMessage}. Ensure OPENAI_API_KEY is set and has access to gpt-5.2.`
+      error: errorMessage
     }, { status: 500 });
   }
 }

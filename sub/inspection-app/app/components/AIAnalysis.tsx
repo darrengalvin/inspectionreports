@@ -312,11 +312,10 @@ export default function AIAnalysis() {
               </div>
               <h3 className="text-lg font-semibold text-neutral-900 mb-2">AI Question Analysis</h3>
               <p className="text-neutral-600 mb-6 max-w-md mx-auto">
-                Evaluate your inspection questions against authoritative UK care and housing guidance 
-                including CQC, Housing Ombudsman, Care Act, and more.
+                Evaluate inspection questions against UK regulatory frameworks.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <button
                   onClick={() => setShowSaved(true)}
                   className="px-6 py-3 bg-neutral-900 text-white font-medium rounded-lg
@@ -329,15 +328,8 @@ export default function AIAnalysis() {
                   className="px-6 py-3 bg-purple-600 text-white font-medium rounded-lg
                            hover:bg-purple-700 transition-colors"
                 >
-                  Run New Analysis (GPT-5.2)
+                  Run New Analysis
                 </button>
-              </div>
-              
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 max-w-lg mx-auto">
-                <p className="text-sm text-purple-800">
-                  <strong>GPT-5.2 Extended Thinking:</strong> New analysis uses OpenAI's latest model with 
-                  extended reasoning capabilities for deep, comprehensive analysis. This may take 1-2 minutes.
-                </p>
               </div>
             </div>
           )}
@@ -347,25 +339,28 @@ export default function AIAnalysis() {
               <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mx-auto mb-4"></div>
               <h3 className="text-lg font-semibold text-neutral-900 mb-2">Analysing Questions...</h3>
               <p className="text-neutral-600">
-                The AI is reviewing all 15 sections against authoritative guidance.
-                <br />This may take up to a minute.
+                Reviewing against UK regulatory frameworks. This may take a moment.
               </p>
             </div>
           )}
 
           {result && !result.success && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-red-900 mb-2">Analysis Failed</h3>
-              <p className="text-red-700 mb-4">{result.error}</p>
-              <p className="text-sm text-red-600 mb-4">
-                Make sure the OPENAI_API_KEY environment variable is set in your Vercel project settings.
-              </p>
-              <button
-                onClick={runAnalysis}
-                className="px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700"
-              >
-                Try Again
-              </button>
+            <div className="text-center py-8">
+              <p className="text-neutral-600 mb-6">Analysis unavailable. View the saved analysis instead.</p>
+              <div className="flex gap-3 justify-center">
+                <button
+                  onClick={() => setShowSaved(true)}
+                  className="px-6 py-3 bg-neutral-900 text-white font-medium rounded-lg hover:bg-neutral-800"
+                >
+                  View Saved Analysis
+                </button>
+                <button
+                  onClick={runAnalysis}
+                  className="px-4 py-2 border border-neutral-300 text-neutral-700 font-medium rounded-lg hover:bg-neutral-50"
+                >
+                  Retry
+                </button>
+              </div>
             </div>
           )}
 
