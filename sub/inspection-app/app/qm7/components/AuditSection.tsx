@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useAudit } from '../context/AuditContext';
-import { AuditSection as AuditSectionType } from '../data/scotland-sections';
+import { AuditSection as AuditSectionType } from '../types/audit';
 import { getWordCount, isNarrativeValid } from '../types/audit';
 
 interface Props {
