@@ -13,7 +13,8 @@ import {
   calculateSectionScore,
   requiresVisitDetails
 } from '../types/audit';
-import { getSectionsForCountry, AuditSection } from '../data/scotland-sections';
+import { getSectionsForCountry } from '../data/scotland-sections';
+import { AuditSection } from '../types/audit';
 
 // Sequence number storage (in production, this would be in a database)
 let globalSequence = 100;
