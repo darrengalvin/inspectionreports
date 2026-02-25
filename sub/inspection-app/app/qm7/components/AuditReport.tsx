@@ -225,7 +225,7 @@ export default function AuditReport() {
                 <div className="p-6 bg-white">
                   <h4 className="text-sm font-medium text-neutral-700 mb-3">Questions</h4>
                   <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-2">
-                    {section.questions.map(question => {
+                    {section.questions.map((question: { id: string; number: number; text: string }) => {
                       const answer = data?.answers.find(a => a.questionId === question.id);
                       return (
                         <div
