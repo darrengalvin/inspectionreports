@@ -16,7 +16,9 @@ export default function PropertySetup({ onComplete }: Props) {
     residentsInterviewed,
     setResidentsInterviewed,
     totalResidents,
-    setTotalResidents
+    setTotalResidents,
+    inspectorName,
+    setInspectorName
   } = useInspection();
 
   const isValid = propertyName.trim() && providerName.trim() && 
@@ -59,6 +61,21 @@ export default function PropertySetup({ onComplete }: Props) {
               value={providerName}
               onChange={(e) => setProviderName(e.target.value)}
               placeholder="e.g., Care Support Ltd"
+              className="w-full px-4 py-3 border border-neutral-200 rounded-lg text-base
+                       focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent
+                       placeholder:text-neutral-400"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-neutral-700 mb-2">
+              Lead Inspector
+            </label>
+            <input
+              type="text"
+              value={inspectorName}
+              onChange={(e) => setInspectorName(e.target.value)}
+              placeholder="e.g., Sarah Mitchell"
               className="w-full px-4 py-3 border border-neutral-200 rounded-lg text-base
                        focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent
                        placeholder:text-neutral-400"

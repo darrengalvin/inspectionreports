@@ -7,6 +7,7 @@ import {
   Quote, 
   QuestionResponse,
   Action,
+  InspectorInfo,
   getStatusFromScore,
   getVerdictFromScore
 } from '../types/inspection';
@@ -22,6 +23,8 @@ interface InspectionContextType {
   setResidentsInterviewed: (count: number) => void;
   totalResidents: number;
   setTotalResidents: (count: number) => void;
+  inspectorName: string;
+  setInspectorName: (name: string) => void;
   
   // Navigation
   currentSectionIndex: number;
@@ -50,6 +53,7 @@ export function InspectionProvider({ children }: { children: React.ReactNode }) 
   const [providerName, setProviderName] = useState('');
   const [residentsInterviewed, setResidentsInterviewed] = useState(0);
   const [totalResidents, setTotalResidents] = useState(0);
+  const [inspectorName, setInspectorName] = useState('');
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [sectionResponses, setSectionResponses] = useState<Map<string, SectionResponse>>(new Map());
   const [actions, setActions] = useState<Action[]>([]);
@@ -111,10 +115,11 @@ export function InspectionProvider({ children }: { children: React.ReactNode }) 
       sections,
       overallScore: Math.round(overallScore * 10) / 10,
       overallVerdict: getVerdictFromScore(overallScore),
-      assessmentSummary: '', // To be written by inspector
-      actions
+      assessmentSummary: '',
+      actions,
+      inspector: inspectorName ? { name: inspectorName, role: 'Lead Quality Inspector' } : undefined,
     };
-  }, [propertyName, providerName, residentsInterviewed, totalResidents, sectionResponses, actions]);
+  }, [propertyName, providerName, residentsInterviewed, totalResidents, sectionResponses, actions, inspectorName]);
 
   return (
     <InspectionContext.Provider value={{
@@ -126,6 +131,8 @@ export function InspectionProvider({ children }: { children: React.ReactNode }) 
       setResidentsInterviewed,
       totalResidents,
       setTotalResidents,
+      inspectorName,
+      setInspectorName,
       currentSectionIndex,
       setCurrentSectionIndex,
       sectionResponses,

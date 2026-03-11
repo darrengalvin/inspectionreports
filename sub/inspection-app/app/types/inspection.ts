@@ -35,6 +35,11 @@ export interface SectionResponse {
   whyThisScore: string;
 }
 
+export interface InspectorInfo {
+  name: string;
+  role: string;
+}
+
 export interface InspectionData {
   id: string;
   propertyName: string;
@@ -47,6 +52,8 @@ export interface InspectionData {
   overallVerdict: 'good' | 'requires-improvement' | 'inadequate';
   assessmentSummary: string;
   actions: Action[];
+  inspector?: InspectorInfo;
+  followUpDate?: string;
 }
 
 export interface Action {
