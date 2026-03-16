@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import { 
   InspectionData, 
   SectionResponse, 
@@ -12,6 +12,24 @@ import {
   getVerdictFromScore
 } from '../types/inspection';
 import { inspectionSections } from '../data/sections';
+import {
+  STORAGE_KEYS,
+  saveToStorage,
+  loadFromStorage,
+  serializeMap,
+  deserializeMap,
+} from '../lib/storage';
+
+interface SerializedInspectionState {
+  propertyName: string;
+  providerName: string;
+  residentsInterviewed: number;
+  totalResidents: number;
+  inspectorName: string;
+  currentSectionIndex: number;
+  sectionResponseEntries: [string, SectionResponse][];
+  actions: Action[];
+}
 
 interface InspectionContextType {
   // Property info
@@ -44,6 +62,8 @@ interface InspectionContextType {
   
   // Progress
   getProgress: () => number;
+
+  saveCurrentState: () => void;
 }
 
 const InspectionContext = createContext<InspectionContextType | null>(null);
@@ -57,6 +77,53 @@ export function InspectionProvider({ children }: { children: React.ReactNode }) 
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [sectionResponses, setSectionResponses] = useState<Map<string, SectionResponse>>(new Map());
   const [actions, setActions] = useState<Action[]>([]);
+  const hasLoadedRef = useRef(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (hasLoadedRef.current) return;
+    hasLoadedRef.current = true;
+
+    const saved = loadFromStorage<SerializedInspectionState>(STORAGE_KEYS.INSPECTION);
+    if (!saved) return;
+
+    setPropertyName(saved.propertyName);
+    setProviderName(saved.providerName);
+    setResidentsInterviewed(saved.residentsInterviewed);
+    setTotalResidents(saved.totalResidents);
+    setInspectorName(saved.inspectorName);
+    setCurrentSectionIndex(saved.currentSectionIndex);
+    setActions(saved.actions);
+    if (saved.sectionResponseEntries?.length > 0) {
+      setSectionResponses(deserializeMap(saved.sectionResponseEntries));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!hasLoadedRef.current) return;
+
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      const serialized: SerializedInspectionState = {
+        propertyName,
+        providerName,
+        residentsInterviewed,
+        totalResidents,
+        inspectorName,
+        currentSectionIndex,
+        sectionResponseEntries: serializeMap(sectionResponses),
+        actions,
+      };
+      saveToStorage(STORAGE_KEYS.INSPECTION, serialized);
+    }, 500);
+
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [
+    propertyName, providerName, residentsInterviewed, totalResidents,
+    inspectorName, currentSectionIndex, sectionResponses, actions,
+  ]);
 
   const updateSectionResponse = useCallback((sectionId: string, response: Partial<SectionResponse>) => {
     setSectionResponses(prev => {
@@ -100,26 +167,58 @@ export function InspectionProvider({ children }: { children: React.ReactNode }) 
     const sections = Array.from(sectionResponses.values());
     const totalScore = sections.reduce((sum, s) => sum + s.score, 0);
     const overallScore = sections.length > 0 ? totalScore / sections.length : 0;
-    
+
+    const autoActions: Action[] = sections
+      .filter(s => s.score < 5)
+      .map((s, i) => {
+        const sectionDef = inspectionSections.find(sec => sec.id === s.sectionId);
+        return {
+          id: `auto-${i + 1}`,
+          priority: s.score < 3 ? 'high' as const : 'medium' as const,
+          title: `Improve ${sectionDef?.title || s.sectionId}`,
+          description: `Score of ${s.score}/10 is below acceptable threshold. ${s.whyThisScore ? `Inspector noted: ${s.whyThisScore.slice(0, 120)}` : 'Immediate review required.'}`,
+          deadline: new Date(Date.now() + (s.score < 3 ? 30 : 60) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        };
+      });
+
+    const allActions = [...actions, ...autoActions];
+    const followUp = allActions.length > 0
+      ? new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+      : undefined;
+
     return {
-      id: `QA-${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}`,
+      id: `QA-${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}-${Date.now().toString(36).slice(-4).toUpperCase()}`,
       propertyName,
       providerName,
-      date: new Date().toLocaleDateString('en-GB', { 
-        day: 'numeric', 
-        month: 'long', 
-        year: 'numeric' 
-      }),
+      date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
       residentsInterviewed,
       totalResidents,
       sections,
       overallScore: Math.round(overallScore * 10) / 10,
       overallVerdict: getVerdictFromScore(overallScore),
       assessmentSummary: '',
-      actions,
+      actions: allActions,
       inspector: inspectorName ? { name: inspectorName, role: 'Lead Quality Inspector' } : undefined,
+      followUpDate: followUp,
     };
   }, [propertyName, providerName, residentsInterviewed, totalResidents, sectionResponses, actions, inspectorName]);
+
+  const saveCurrentState = useCallback(() => {
+    const serialized: SerializedInspectionState = {
+      propertyName,
+      providerName,
+      residentsInterviewed,
+      totalResidents,
+      inspectorName,
+      currentSectionIndex,
+      sectionResponseEntries: serializeMap(sectionResponses),
+      actions,
+    };
+    saveToStorage(STORAGE_KEYS.INSPECTION, serialized);
+  }, [
+    propertyName, providerName, residentsInterviewed, totalResidents,
+    inspectorName, currentSectionIndex, sectionResponses, actions,
+  ]);
 
   return (
     <InspectionContext.Provider value={{
@@ -141,7 +240,8 @@ export function InspectionProvider({ children }: { children: React.ReactNode }) 
       addAction,
       removeAction,
       generateReportData,
-      getProgress
+      getProgress,
+      saveCurrentState,
     }}>
       {children}
     </InspectionContext.Provider>

@@ -1,9 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AuditProvider, useAudit } from './context/AuditContext';
 import AuditSetup from './components/AuditSetup';
 import VisitDetails from './components/VisitDetails';
+import CareSystemsObservation from './components/CareSystemsObservation';
+import Accreditations from './components/Accreditations';
 import AuditSection from './components/AuditSection';
 import AuditSidebar from './components/AuditSidebar';
 import AuditReport from './components/AuditReport';
@@ -18,6 +20,12 @@ function QM7AuditApp() {
     sections,
     setCurrentStep
   } = useAudit();
+
+  useEffect(() => {
+    if (currentStep === 'visit-details' && !requiresVisitDetails(setup.serviceType)) {
+      setCurrentStep('care-systems');
+    }
+  }, [currentStep, setup.serviceType, setCurrentStep]);
 
   const handleNext = () => {
     if (currentSectionIndex < sections.length - 1) {
@@ -40,21 +48,25 @@ function QM7AuditApp() {
     window.scrollTo(0, 0);
   };
 
-  // Setup step
   if (currentStep === 'setup') {
     return <AuditSetup />;
   }
 
-  // Visit details step (only for supported-living and day-service)
   if (currentStep === 'visit-details') {
     if (!requiresVisitDetails(setup.serviceType)) {
-      setCurrentStep('audit');
       return null;
     }
     return <VisitDetails />;
   }
 
-  // Audit step
+  if (currentStep === 'care-systems') {
+    return <CareSystemsObservation />;
+  }
+
+  if (currentStep === 'accreditations') {
+    return <Accreditations />;
+  }
+
   if (currentStep === 'audit') {
     if (sections.length === 0) {
       return (
@@ -78,7 +90,7 @@ function QM7AuditApp() {
     return (
       <div className="flex min-h-screen bg-white">
         <AuditSidebar onSectionSelect={handleSectionSelect} />
-        
+
         <main className="flex-1 overflow-y-auto pt-16 lg:pt-0">
           <AuditSection
             section={currentSection}
@@ -92,7 +104,6 @@ function QM7AuditApp() {
     );
   }
 
-  // Report step
   if (currentStep === 'report') {
     return <AuditReport />;
   }

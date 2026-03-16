@@ -15,7 +15,7 @@ export interface Contact {
 }
 
 export interface AuditSetupData {
-  auditNumber: string;          // e.g., "S-107" for Scotland
+  auditNumber: string;
   serviceType: ServiceType | null;
   country: Country | null;
   serviceName: string;
@@ -31,10 +31,114 @@ export interface VisitDetails {
   clientsInService: number;
   staffOnShift: number;
   hasOtherVisitors: boolean | null;
-  visitorNames: string[];       // up to 3
+  visitorNames: string[];
   clientFocus1: string;
   clientFocus2: string;
 }
+
+// Care Support Systems
+export type CareSupportSystem =
+  | 'nourish'
+  | 'cura-systems'
+  | 'pcs'
+  | 'total-care-manager'
+  | 'plan-4-care'
+  | 'care-beans'
+  | 'care-control-systems'
+  | 'whzan'
+  | 'what-matters-most'
+  | 'non-listed-effective'
+  | 'none';
+
+export const CARE_SYSTEM_LABELS: Record<CareSupportSystem, string> = {
+  'nourish': 'Nourish',
+  'cura-systems': 'Cura Systems',
+  'pcs': 'PCS – Person Centred Software',
+  'total-care-manager': 'Total Care Manager',
+  'plan-4-care': 'Plan 4 Care',
+  'care-beans': 'Care Beans',
+  'care-control-systems': 'Care Control Systems',
+  'whzan': 'Whzan',
+  'what-matters-most': 'What Matters Most App – Mencap\'s Own',
+  'non-listed-effective': 'Non-listed but software is used effectively',
+  'none': 'None at all',
+};
+
+export const CARE_SYSTEMS_LIST: CareSupportSystem[] = [
+  'nourish', 'cura-systems', 'pcs', 'total-care-manager',
+  'plan-4-care', 'care-beans', 'care-control-systems', 'whzan',
+  'what-matters-most', 'non-listed-effective', 'none',
+];
+
+// Observation Audit
+export interface ObservationAuditData {
+  recentCareNotes: boolean | null;
+  redOverdueDates: boolean | null;
+  staffSystemSkill: 'excellent' | 'good' | 'adequate' | 'poor' | null;
+  notificationCount: string;
+  effectiveSystem: boolean | null;
+  observationOverview: string;
+  hasRecommendations: boolean | null;
+  recommendationsText: string;
+  careSupportSystem: CareSupportSystem | null;
+}
+
+// Accreditations
+export type AccreditationStatus = 'yes' | 'no' | 'in-progress' | 'expired' | null;
+
+export interface AccreditationsData {
+  cpi: AccreditationStatus;
+  bildPbs: AccreditationStatus;
+  stomp: AccreditationStatus;
+  omg: AccreditationStatus;
+  rrn: AccreditationStatus;
+  bildObservationNotes: string;
+}
+
+export const ACCREDITATION_LABELS: Record<string, string> = {
+  'cpi': 'CPI',
+  'bildPbs': 'BILD PBS',
+  'stomp': 'STOMP',
+  'omg': 'OMG',
+  'rrn': 'RRN',
+};
+
+export const ACCREDITATION_STATUS_LABELS: Record<string, string> = {
+  'yes': 'Accredited',
+  'no': 'Not Accredited',
+  'in-progress': 'In Progress',
+  'expired': 'Expired',
+};
+
+// Action Plan (AI-generated when below pass threshold)
+export interface ActionPlanItem {
+  id: string;
+  area: string;
+  finding: string;
+  action: string;
+  responsible: string;
+  deadline: string;
+  priority: 'high' | 'medium' | 'low';
+}
+
+export interface ActionPlan {
+  items: ActionPlanItem[];
+  generatedAt: string;
+  followUpDate: string;
+  overallRecommendation: string;
+}
+
+// Certificate / Endorsement
+export interface AuditEndorsement {
+  referenceNumber: string;
+  passed: boolean;
+  percentage: number;
+  serviceName: string;
+  dateIssued: string;
+  endorsedBy: string;
+}
+
+export const PASS_THRESHOLD = 70;
 
 export interface AuditQuestion {
   id: string;
@@ -45,7 +149,8 @@ export interface AuditQuestion {
 export interface AuditSection {
   id: string;
   title: string;
-  countryPrefix: string;        // e.g., "Scotland" for display
+  icon: string;
+  countryPrefix: string;
   maxScore: number;
   questions: AuditQuestion[];
   wordCountMin: number;
@@ -54,7 +159,7 @@ export interface AuditSection {
 
 export interface QuestionAnswer {
   questionId: string;
-  answer: boolean | null;       // true = Yes (1 point), false = No (0 points), null = unanswered
+  answer: boolean | null;
 }
 
 export interface SectionData {
@@ -66,12 +171,18 @@ export interface SectionData {
   isNarrativeSaved: boolean;
 }
 
+export type AuditStep = 'setup' | 'visit-details' | 'care-systems' | 'accreditations' | 'audit' | 'report';
+
 export interface AuditState {
   setup: AuditSetupData;
   visitDetails: VisitDetails;
+  observationAudit: ObservationAuditData;
+  accreditations: AccreditationsData;
   sections: Map<string, SectionData>;
-  currentStep: 'setup' | 'visit-details' | 'audit' | 'report';
+  currentStep: AuditStep;
   currentSectionIndex: number;
+  actionPlan: ActionPlan | null;
+  endorsement: AuditEndorsement | null;
 }
 
 // Country prefixes for audit numbers
@@ -98,24 +209,32 @@ export const COUNTRY_LABELS: Record<Country, string> = {
   'northern-ireland': 'Northern Ireland'
 };
 
-// Helper to calculate section score from answers
+// Section icons (SVG path data keyed by section id)
+export const SECTION_ICONS: Record<string, string> = {
+  'person-centred-care': '👤',
+  'dignity-respect-rights': '🤝',
+  'professionalism-staff-practice': '📋',
+  'staff-knowledge': '🧠',
+  'positive-behaviour-support': '💚',
+  'medication-management': '💊',
+  'staff-training-compliance': '🎓',
+  'leadership-governance': '🏛️',
+};
+
 export function calculateSectionScore(answers: QuestionAnswer[]): number {
   return answers.filter(a => a.answer === true).length;
 }
 
-// Helper to get word count from text
 export function getWordCount(text: string): number {
   return text.trim().split(/\s+/).filter(word => word.length > 0).length;
 }
 
-// Helper to check if narrative meets word count requirements
 export function isNarrativeValid(text: string, minWords: number, maxWords: number): boolean {
   const count = getWordCount(text);
   return count >= minWords && count <= maxWords;
 }
 
-// Helper to generate audit number
-let auditSequence = 100; // Starting sequence
+let auditSequence = 100;
 export function generateAuditNumber(country: Country | null): string {
   if (!country) return '';
   const prefix = COUNTRY_PREFIXES[country];
@@ -123,7 +242,36 @@ export function generateAuditNumber(country: Country | null): string {
   return `${prefix}-${auditSequence}`;
 }
 
-// Check if service type requires visit details (options 3 & 4)
 export function requiresVisitDetails(serviceType: ServiceType | null): boolean {
   return serviceType === 'supported-living' || serviceType === 'day-service';
 }
+
+export function generateEndorsementRef(auditNumber: string): string {
+  const timestamp = Date.now().toString(36).toUpperCase();
+  return `QM7-${auditNumber}-${timestamp}`;
+}
+
+export function isPassing(percentage: number): boolean {
+  return percentage >= PASS_THRESHOLD;
+}
+
+export const initialObservationAudit: ObservationAuditData = {
+  recentCareNotes: null,
+  redOverdueDates: null,
+  staffSystemSkill: null,
+  notificationCount: '',
+  effectiveSystem: null,
+  observationOverview: '',
+  hasRecommendations: null,
+  recommendationsText: '',
+  careSupportSystem: null,
+};
+
+export const initialAccreditations: AccreditationsData = {
+  cpi: null,
+  bildPbs: null,
+  stomp: null,
+  omg: null,
+  rrn: null,
+  bildObservationNotes: '',
+};

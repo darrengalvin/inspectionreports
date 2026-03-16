@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import {
   AuditSetupData,
   VisitDetails,
@@ -9,34 +9,75 @@ import {
   Country,
   ServiceType,
   Contact,
+  ObservationAuditData,
+  AccreditationsData,
+  ActionPlan,
+  AuditEndorsement,
+  AuditStep,
   COUNTRY_PREFIXES,
+  PASS_THRESHOLD,
   calculateSectionScore,
-  requiresVisitDetails
+  requiresVisitDetails,
+  generateEndorsementRef,
+  initialObservationAudit,
+  initialAccreditations,
 } from '../types/audit';
 import { getSectionsForCountry } from '../data/scotland-sections';
 import { AuditSection } from '../types/audit';
+import {
+  STORAGE_KEYS,
+  saveToStorage,
+  loadFromStorage,
+  serializeMap,
+  deserializeMap,
+  saveAuditToHistory,
+  addEndorsedService,
+} from '../../lib/storage';
 
-// Sequence number storage (in production, this would be in a database)
 let globalSequence = 100;
 
+interface SerializedAuditState {
+  setup: AuditSetupData;
+  visitDetails: VisitDetails;
+  observationAudit: ObservationAuditData;
+  accreditations: AccreditationsData;
+  currentStep: AuditStep;
+  currentSectionIndex: number;
+  sectionDataEntries: [string, SectionData][];
+  actionPlan: ActionPlan | null;
+  endorsement: AuditEndorsement | null;
+  isSetupSaved: boolean;
+  isVisitDetailsSaved: boolean;
+  isObservationSaved: boolean;
+  isAccreditationsSaved: boolean;
+}
+
 interface AuditContextType {
-  // Setup data
   setup: AuditSetupData;
   updateSetup: (data: Partial<AuditSetupData>) => void;
   setServiceType: (type: ServiceType) => void;
   setCountry: (country: Country) => void;
-  
-  // Visit details
+
   visitDetails: VisitDetails;
   updateVisitDetails: (data: Partial<VisitDetails>) => void;
-  
-  // Navigation
-  currentStep: 'setup' | 'visit-details' | 'audit' | 'report';
-  setCurrentStep: (step: 'setup' | 'visit-details' | 'audit' | 'report') => void;
+
+  observationAudit: ObservationAuditData;
+  updateObservationAudit: (data: Partial<ObservationAuditData>) => void;
+  isObservationValid: () => boolean;
+  saveObservation: () => void;
+  isObservationSaved: boolean;
+
+  accreditations: AccreditationsData;
+  updateAccreditations: (data: Partial<AccreditationsData>) => void;
+  isAccreditationsValid: () => boolean;
+  saveAccreditations: () => void;
+  isAccreditationsSaved: boolean;
+
+  currentStep: AuditStep;
+  setCurrentStep: (step: AuditStep) => void;
   currentSectionIndex: number;
   setCurrentSectionIndex: (index: number) => void;
-  
-  // Sections
+
   sections: AuditSection[];
   sectionData: Map<string, SectionData>;
   updateSectionAnswer: (sectionId: string, questionId: string, answer: boolean) => void;
@@ -46,21 +87,27 @@ interface AuditContextType {
   getSectionScore: (sectionId: string) => number;
   getTotalScore: () => number;
   getTotalMaxScore: () => number;
-  
-  // Search
+  getPercentage: () => number;
+  isPassing: () => boolean;
+
+  actionPlan: ActionPlan | null;
+  setActionPlan: (plan: ActionPlan | null) => void;
+  endorsement: AuditEndorsement | null;
+  generateEndorsement: () => AuditEndorsement;
+
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   searchResults: AuditSetupData[];
-  
-  // Validation
+
   isSetupValid: () => boolean;
   isVisitDetailsValid: () => boolean;
-  
-  // Save all
   saveSetup: () => void;
   saveVisitDetails: () => void;
   isSetupSaved: boolean;
   isVisitDetailsSaved: boolean;
+
+  saveCurrentState: () => void;
+  loadSavedAudit: (auditNumber: string) => void;
 }
 
 const AuditContext = createContext<AuditContextType | null>(null);
@@ -92,21 +139,87 @@ const initialVisitDetails: VisitDetails = {
 export function AuditProvider({ children }: { children: React.ReactNode }) {
   const [setup, setSetup] = useState<AuditSetupData>(initialSetup);
   const [visitDetails, setVisitDetails] = useState<VisitDetails>(initialVisitDetails);
-  const [currentStep, setCurrentStep] = useState<'setup' | 'visit-details' | 'audit' | 'report'>('setup');
+  const [observationAudit, setObservationAudit] = useState<ObservationAuditData>(initialObservationAudit);
+  const [accreditations, setAccreditationsState] = useState<AccreditationsData>(initialAccreditations);
+  const [currentStep, setCurrentStep] = useState<AuditStep>('setup');
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [sectionData, setSectionData] = useState<Map<string, SectionData>>(new Map());
   const [searchQuery, setSearchQuery] = useState('');
   const [isSetupSaved, setIsSetupSaved] = useState(false);
   const [isVisitDetailsSaved, setIsVisitDetailsSaved] = useState(false);
+  const [isObservationSaved, setIsObservationSaved] = useState(false);
+  const [isAccreditationsSaved, setIsAccreditationsSaved] = useState(false);
   const [sections, setSections] = useState<AuditSection[]>([]);
+  const [actionPlan, setActionPlan] = useState<ActionPlan | null>(null);
+  const [endorsement, setEndorsement] = useState<AuditEndorsement | null>(null);
+  const hasLoadedRef = useRef(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Update sections when country changes
+  // Load saved state from localStorage on mount
+  useEffect(() => {
+    if (hasLoadedRef.current) return;
+    hasLoadedRef.current = true;
+
+    const saved = loadFromStorage<SerializedAuditState>(STORAGE_KEYS.QM7_AUDIT);
+    if (!saved) return;
+
+    setSetup(saved.setup);
+    setVisitDetails(saved.visitDetails);
+    setObservationAudit(saved.observationAudit);
+    setAccreditationsState(saved.accreditations);
+    setCurrentStep(saved.currentStep);
+    setCurrentSectionIndex(saved.currentSectionIndex);
+    setActionPlan(saved.actionPlan);
+    setEndorsement(saved.endorsement);
+    setIsSetupSaved(saved.isSetupSaved);
+    setIsVisitDetailsSaved(saved.isVisitDetailsSaved);
+    setIsObservationSaved(saved.isObservationSaved);
+    setIsAccreditationsSaved(saved.isAccreditationsSaved);
+
+    if (saved.sectionDataEntries?.length > 0) {
+      setSectionData(deserializeMap(saved.sectionDataEntries));
+    }
+  }, []);
+
+  // Auto-save to localStorage with debounce
+  useEffect(() => {
+    if (!hasLoadedRef.current) return;
+
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      const serialized: SerializedAuditState = {
+        setup,
+        visitDetails,
+        observationAudit,
+        accreditations,
+        currentStep,
+        currentSectionIndex,
+        sectionDataEntries: serializeMap(sectionData),
+        actionPlan,
+        endorsement,
+        isSetupSaved,
+        isVisitDetailsSaved,
+        isObservationSaved,
+        isAccreditationsSaved,
+      };
+      saveToStorage(STORAGE_KEYS.QM7_AUDIT, serialized);
+    }, 500);
+
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [
+    setup, visitDetails, observationAudit, accreditations,
+    currentStep, currentSectionIndex, sectionData,
+    actionPlan, endorsement,
+    isSetupSaved, isVisitDetailsSaved, isObservationSaved, isAccreditationsSaved,
+  ]);
+
   useEffect(() => {
     if (setup.country) {
       const countrySections = getSectionsForCountry(setup.country);
       setSections(countrySections);
-      
-      // Initialize section data for each section
+
       const newSectionData = new Map<string, SectionData>();
       countrySections.forEach(section => {
         newSectionData.set(section.id, {
@@ -145,6 +258,16 @@ export function AuditProvider({ children }: { children: React.ReactNode }) {
     setIsVisitDetailsSaved(false);
   }, []);
 
+  const updateObservationAudit = useCallback((data: Partial<ObservationAuditData>) => {
+    setObservationAudit(prev => ({ ...prev, ...data }));
+    setIsObservationSaved(false);
+  }, []);
+
+  const updateAccreditations = useCallback((data: Partial<AccreditationsData>) => {
+    setAccreditationsState(prev => ({ ...prev, ...data }));
+    setIsAccreditationsSaved(false);
+  }, []);
+
   const updateSectionAnswer = useCallback((sectionId: string, questionId: string, answer: boolean) => {
     setSectionData(prev => {
       const newMap = new Map(prev);
@@ -154,12 +277,7 @@ export function AuditProvider({ children }: { children: React.ReactNode }) {
           a.questionId === questionId ? { ...a, answer } : a
         );
         const score = calculateSectionScore(updatedAnswers);
-        newMap.set(sectionId, {
-          ...existing,
-          answers: updatedAnswers,
-          score,
-          isSaved: false
-        });
+        newMap.set(sectionId, { ...existing, answers: updatedAnswers, score, isSaved: false });
       }
       return newMap;
     });
@@ -170,11 +288,7 @@ export function AuditProvider({ children }: { children: React.ReactNode }) {
       const newMap = new Map(prev);
       const existing = newMap.get(sectionId);
       if (existing) {
-        newMap.set(sectionId, {
-          ...existing,
-          narrative,
-          isNarrativeSaved: false
-        });
+        newMap.set(sectionId, { ...existing, narrative, isNarrativeSaved: false });
       }
       return newMap;
     });
@@ -209,15 +323,25 @@ export function AuditProvider({ children }: { children: React.ReactNode }) {
 
   const getTotalScore = useCallback((): number => {
     let total = 0;
-    sectionData.forEach(data => {
-      total += data.score;
-    });
+    sectionData.forEach(data => { total += data.score; });
     return total;
   }, [sectionData]);
 
   const getTotalMaxScore = useCallback((): number => {
     return sections.reduce((sum, s) => sum + s.maxScore, 0);
   }, [sections]);
+
+  const getPercentage = useCallback((): number => {
+    const max = sections.reduce((sum, s) => sum + s.maxScore, 0);
+    if (max === 0) return 0;
+    let total = 0;
+    sectionData.forEach(data => { total += data.score; });
+    return Math.round((total / max) * 100);
+  }, [sections, sectionData]);
+
+  const isPassing = useCallback((): boolean => {
+    return getPercentage() >= PASS_THRESHOLD;
+  }, [getPercentage]);
 
   const isSetupValid = useCallback((): boolean => {
     return !!(
@@ -243,51 +367,149 @@ export function AuditProvider({ children }: { children: React.ReactNode }) {
     );
   }, [visitDetails]);
 
+  const isObservationValid = useCallback((): boolean => {
+    return !!(
+      observationAudit.careSupportSystem &&
+      observationAudit.recentCareNotes !== null &&
+      observationAudit.staffSystemSkill &&
+      observationAudit.effectiveSystem !== null &&
+      observationAudit.hasRecommendations !== null
+    );
+  }, [observationAudit]);
+
+  const isAccreditationsValid = useCallback((): boolean => {
+    return !!(
+      accreditations.cpi !== null &&
+      accreditations.bildPbs !== null &&
+      accreditations.stomp !== null
+    );
+  }, [accreditations]);
+
   const saveSetup = useCallback(() => {
-    if (isSetupValid()) {
-      setIsSetupSaved(true);
-    }
+    if (isSetupValid()) setIsSetupSaved(true);
   }, [isSetupValid]);
 
   const saveVisitDetails = useCallback(() => {
-    if (isVisitDetailsValid()) {
-      setIsVisitDetailsSaved(true);
-    }
+    if (isVisitDetailsValid()) setIsVisitDetailsSaved(true);
   }, [isVisitDetailsValid]);
 
-  // Search results (mock - in production this would query a database)
+  const saveObservation = useCallback(() => {
+    if (isObservationValid()) setIsObservationSaved(true);
+  }, [isObservationValid]);
+
+  const saveAccreditations = useCallback(() => {
+    if (isAccreditationsValid()) setIsAccreditationsSaved(true);
+  }, [isAccreditationsValid]);
+
+  const generateEndorsement = useCallback((): AuditEndorsement => {
+    const pct = getPercentage();
+    const ref = generateEndorsementRef(setup.auditNumber);
+    const newEndorsement: AuditEndorsement = {
+      referenceNumber: ref,
+      passed: pct >= PASS_THRESHOLD,
+      percentage: pct,
+      serviceName: setup.serviceName,
+      dateIssued: new Date().toISOString(),
+      endorsedBy: 'DPB Quality Management',
+    };
+    setEndorsement(newEndorsement);
+
+    saveAuditToHistory({
+      auditNumber: setup.auditNumber,
+      serviceName: setup.serviceName,
+      country: setup.country ?? '',
+      percentage: pct,
+      dateCompleted: new Date().toISOString(),
+      passed: pct >= PASS_THRESHOLD,
+    });
+
+    if (pct >= PASS_THRESHOLD) {
+      const endorsed = {
+        referenceNumber: ref,
+        auditNumber: setup.auditNumber,
+        serviceName: setup.serviceName,
+        percentage: pct,
+        dateIssued: new Date().toISOString(),
+        country: setup.country ?? '',
+        endorsedBy: 'DPB Quality Management',
+      };
+      addEndorsedService(endorsed);
+      fetch('/api/endorsed', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(endorsed),
+      }).catch(() => {});
+    }
+
+    return newEndorsement;
+  }, [getPercentage, setup.auditNumber, setup.serviceName, setup.country]);
+
+  const saveCurrentState = useCallback(() => {
+    const serialized: SerializedAuditState = {
+      setup,
+      visitDetails,
+      observationAudit,
+      accreditations,
+      currentStep,
+      currentSectionIndex,
+      sectionDataEntries: serializeMap(sectionData),
+      actionPlan,
+      endorsement,
+      isSetupSaved,
+      isVisitDetailsSaved,
+      isObservationSaved,
+      isAccreditationsSaved,
+    };
+    saveToStorage(STORAGE_KEYS.QM7_AUDIT, serialized);
+  }, [
+    setup, visitDetails, observationAudit, accreditations,
+    currentStep, currentSectionIndex, sectionData,
+    actionPlan, endorsement,
+    isSetupSaved, isVisitDetailsSaved, isObservationSaved, isAccreditationsSaved,
+  ]);
+
+  const loadSavedAudit = useCallback((auditNumber: string) => {
+    const saved = loadFromStorage<SerializedAuditState>(STORAGE_KEYS.QM7_AUDIT);
+    if (saved && saved.setup.auditNumber === auditNumber) {
+      setSetup(saved.setup);
+      setVisitDetails(saved.visitDetails);
+      setObservationAudit(saved.observationAudit);
+      setAccreditationsState(saved.accreditations);
+      setCurrentStep(saved.currentStep);
+      setCurrentSectionIndex(saved.currentSectionIndex);
+      setActionPlan(saved.actionPlan);
+      setEndorsement(saved.endorsement);
+      setIsSetupSaved(saved.isSetupSaved);
+      setIsVisitDetailsSaved(saved.isVisitDetailsSaved);
+      setIsObservationSaved(saved.isObservationSaved);
+      setIsAccreditationsSaved(saved.isAccreditationsSaved);
+      if (saved.sectionDataEntries?.length > 0) {
+        setSectionData(deserializeMap(saved.sectionDataEntries));
+      }
+    }
+  }, []);
+
   const searchResults: AuditSetupData[] = [];
 
   return (
     <AuditContext.Provider value={{
-      setup,
-      updateSetup,
-      setServiceType,
-      setCountry,
-      visitDetails,
-      updateVisitDetails,
-      currentStep,
-      setCurrentStep,
-      currentSectionIndex,
-      setCurrentSectionIndex,
-      sections,
-      sectionData,
-      updateSectionAnswer,
-      updateSectionNarrative,
-      saveSectionScore,
-      saveSectionNarrative,
-      getSectionScore,
-      getTotalScore,
-      getTotalMaxScore,
-      searchQuery,
-      setSearchQuery,
-      searchResults,
-      isSetupValid,
-      isVisitDetailsValid,
-      saveSetup,
-      saveVisitDetails,
-      isSetupSaved,
-      isVisitDetailsSaved
+      setup, updateSetup, setServiceType, setCountry,
+      visitDetails, updateVisitDetails,
+      observationAudit, updateObservationAudit, isObservationValid, saveObservation, isObservationSaved,
+      accreditations, updateAccreditations, isAccreditationsValid, saveAccreditations, isAccreditationsSaved,
+      currentStep, setCurrentStep,
+      currentSectionIndex, setCurrentSectionIndex,
+      sections, sectionData,
+      updateSectionAnswer, updateSectionNarrative,
+      saveSectionScore, saveSectionNarrative,
+      getSectionScore, getTotalScore, getTotalMaxScore, getPercentage, isPassing,
+      actionPlan, setActionPlan,
+      endorsement, generateEndorsement,
+      searchQuery, setSearchQuery, searchResults,
+      isSetupValid, isVisitDetailsValid,
+      saveSetup, saveVisitDetails,
+      isSetupSaved, isVisitDetailsSaved,
+      saveCurrentState, loadSavedAudit,
     }}>
       {children}
     </AuditContext.Provider>

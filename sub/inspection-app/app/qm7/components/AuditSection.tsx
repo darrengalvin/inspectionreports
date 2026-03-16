@@ -118,9 +118,11 @@ export default function AuditSection({ section, onNext, onPrevious, isFirst, isL
                         {question.text}
                       </p>
                     </div>
-                    <div className="flex gap-2 shrink-0">
+                    <div className="flex gap-2 shrink-0" role="group" aria-label={`Answer for question ${question.number}`}>
                       <button
                         onClick={() => updateSectionAnswer(section.id, question.id, true)}
+                        aria-label={`Answer yes to question ${question.number}`}
+                        aria-pressed={answer?.answer === true}
                         className={`px-4 py-2 rounded-lg font-medium text-sm transition-all
                           ${answer?.answer === true
                             ? 'bg-green-600 text-white'
@@ -131,6 +133,8 @@ export default function AuditSection({ section, onNext, onPrevious, isFirst, isL
                       </button>
                       <button
                         onClick={() => updateSectionAnswer(section.id, question.id, false)}
+                        aria-label={`Answer no to question ${question.number}`}
+                        aria-pressed={answer?.answer === false}
                         className={`px-4 py-2 rounded-lg font-medium text-sm transition-all
                           ${answer?.answer === false
                             ? 'bg-red-600 text-white'
@@ -245,11 +249,11 @@ export default function AuditSection({ section, onNext, onPrevious, isFirst, isL
           )}
           {isFirst && (
             <button
-              onClick={() => setCurrentStep('visit-details')}
+              onClick={() => setCurrentStep('accreditations')}
               className="flex-1 px-6 py-3 border border-neutral-200 text-neutral-700 font-medium rounded-lg
                        hover:bg-neutral-50 transition-colors"
             >
-              ← Back to Visit Details
+              ← Back to Accreditations
             </button>
           )}
         </div>

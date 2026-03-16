@@ -6,9 +6,10 @@ import { useInspection } from '../context/InspectionContext';
 
 interface Props {
   onSectionSelect: (index: number) => void;
+  onGenerateReport?: () => void;
 }
 
-export default function Sidebar({ onSectionSelect }: Props) {
+export default function Sidebar({ onSectionSelect, onGenerateReport }: Props) {
   const { currentSectionIndex, sectionResponses, propertyName, getProgress } = useInspection();
   const [isOpen, setIsOpen] = useState(false);
   
@@ -46,6 +47,8 @@ export default function Sidebar({ onSectionSelect }: Props) {
           </div>
           <button
             onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle navigation"
+            aria-expanded={isOpen}
             className="p-2 rounded-lg bg-neutral-100 text-neutral-700"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,7 +136,8 @@ export default function Sidebar({ onSectionSelect }: Props) {
       
       {/* Footer */}
       <div className="p-4 border-t border-neutral-200">
-        <button 
+        <button
+          onClick={onGenerateReport}
           className="w-full px-4 py-2.5 bg-neutral-900 text-white text-sm font-medium 
                    rounded-lg hover:bg-neutral-800 transition-colors"
         >

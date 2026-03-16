@@ -1,9 +1,13 @@
 import { AuditSection } from '../types/audit';
+import { englandSections } from './england-sections';
+import { walesSections } from './wales-sections';
+import { niSections } from './ni-sections';
 
 export const scotlandSections: AuditSection[] = [
   {
     id: 'person-centred-care',
     title: 'PERSON-CENTRED CARE & CHOICE',
+    icon: '👤',
     countryPrefix: 'Scotland',
     maxScore: 20,
     wordCountMin: 335,
@@ -34,6 +38,7 @@ export const scotlandSections: AuditSection[] = [
   {
     id: 'dignity-respect-rights',
     title: 'DIGNITY, RESPECT & RIGHTS',
+    icon: '🤝',
     countryPrefix: 'Scotland',
     maxScore: 15,
     wordCountMin: 300,
@@ -59,6 +64,7 @@ export const scotlandSections: AuditSection[] = [
   {
     id: 'professionalism-staff-practice',
     title: 'PROFESSIONALISM & STAFF PRACTICE',
+    icon: '📋',
     countryPrefix: 'Scotland',
     maxScore: 15,
     wordCountMin: 300,
@@ -84,6 +90,7 @@ export const scotlandSections: AuditSection[] = [
   {
     id: 'staff-knowledge',
     title: 'STAFF KNOWLEDGE ON INDIVIDUALS SUPPORTED',
+    icon: '🧠',
     countryPrefix: 'Scotland',
     maxScore: 10,
     wordCountMin: 260,
@@ -104,6 +111,7 @@ export const scotlandSections: AuditSection[] = [
   {
     id: 'positive-behaviour-support',
     title: 'POSITIVE BEHAVIOUR SUPPORT (PBS)',
+    icon: '💚',
     countryPrefix: 'Scotland',
     maxScore: 10,
     wordCountMin: 300,
@@ -124,6 +132,7 @@ export const scotlandSections: AuditSection[] = [
   {
     id: 'medication-management',
     title: 'MEDICATION MANAGEMENT',
+    icon: '💊',
     countryPrefix: 'Scotland',
     maxScore: 10,
     wordCountMin: 280,
@@ -144,6 +153,7 @@ export const scotlandSections: AuditSection[] = [
   {
     id: 'staff-training-compliance',
     title: 'STAFF TRAINING & COMPLIANCE',
+    icon: '🎓',
     countryPrefix: 'Scotland',
     maxScore: 10,
     wordCountMin: 300,
@@ -164,6 +174,7 @@ export const scotlandSections: AuditSection[] = [
   {
     id: 'leadership-governance',
     title: 'LEADERSHIP, GOVERNANCE & QUALITY ASSURANCE',
+    icon: '🏛️',
     countryPrefix: 'Scotland',
     maxScore: 10,
     wordCountMin: 300,
@@ -183,24 +194,16 @@ export const scotlandSections: AuditSection[] = [
   }
 ];
 
-// Helper to get all sections for a country
 export function getSectionsForCountry(country: string): AuditSection[] {
-  // Currently only Scotland sections are implemented
-  // Other countries can be added here with their specific sections
   switch (country) {
     case 'scotland':
       return scotlandSections;
-    // Placeholder for other countries - they would have their own regulatory frameworks
     case 'england':
+      return englandSections;
     case 'wales':
+      return walesSections;
     case 'northern-ireland':
-      // For now, return Scotland sections as template
-      // In production, each country would have its own sections based on regulations
-      return scotlandSections.map(s => ({
-        ...s,
-        countryPrefix: country === 'england' ? 'England' : 
-                       country === 'wales' ? 'Wales' : 'Northern Ireland'
-      }));
+      return niSections;
     default:
       return [];
   }

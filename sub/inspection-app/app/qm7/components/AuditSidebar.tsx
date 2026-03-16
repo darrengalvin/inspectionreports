@@ -28,6 +28,8 @@ export default function AuditSidebar({ onSectionSelect }: Props) {
       {/* Mobile toggle button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
+        aria-label="Toggle navigation"
+        aria-expanded={isOpen}
         className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white border border-neutral-200 rounded-lg shadow-sm"
       >
         <svg className="w-6 h-6 text-neutral-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -44,7 +46,9 @@ export default function AuditSidebar({ onSectionSelect }: Props) {
       )}
 
       {/* Sidebar */}
-      <aside className={`
+      <aside
+        aria-label="QM7 Audit navigation"
+        className={`
         fixed lg:sticky top-0 left-0 h-screen w-72 bg-neutral-50 border-r border-neutral-200
         overflow-y-auto z-40 transition-transform duration-300
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}

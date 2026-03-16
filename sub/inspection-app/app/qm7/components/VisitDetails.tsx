@@ -17,7 +17,7 @@ export default function VisitDetails() {
   const handleSaveAndContinue = () => {
     saveVisitDetails();
     if (isVisitDetailsValid()) {
-      setCurrentStep('audit');
+      setCurrentStep('care-systems');
     }
   };
 
@@ -104,9 +104,11 @@ export default function VisitDetails() {
             <label className="block text-sm font-medium text-neutral-700 mb-2">
               ID Checked?
             </label>
-            <div className="flex gap-4">
+            <div className="flex gap-4" role="group" aria-label="ID checked?">
               <button
                 onClick={() => updateVisitDetails({ idChecked: true })}
+                aria-label="Answer yes to ID checked"
+                aria-pressed={visitDetails.idChecked === true}
                 className={`flex-1 py-3 rounded-lg border font-medium transition-all
                   ${visitDetails.idChecked === true
                     ? 'bg-green-600 text-white border-green-600'
@@ -117,6 +119,8 @@ export default function VisitDetails() {
               </button>
               <button
                 onClick={() => updateVisitDetails({ idChecked: false })}
+                aria-label="Answer no to ID checked"
+                aria-pressed={visitDetails.idChecked === false}
                 className={`flex-1 py-3 rounded-lg border font-medium transition-all
                   ${visitDetails.idChecked === false
                     ? 'bg-red-600 text-white border-red-600'
@@ -171,9 +175,11 @@ export default function VisitDetails() {
             <label className="block text-sm font-medium text-neutral-700 mb-2">
               Any Other Visitors in the Service?
             </label>
-            <div className="flex gap-4">
+            <div className="flex gap-4" role="group" aria-label="Any other visitors in the service?">
               <button
                 onClick={() => updateVisitDetails({ hasOtherVisitors: true })}
+                aria-label="Answer yes to other visitors in the service"
+                aria-pressed={visitDetails.hasOtherVisitors === true}
                 className={`flex-1 py-3 rounded-lg border font-medium transition-all
                   ${visitDetails.hasOtherVisitors === true
                     ? 'bg-neutral-900 text-white border-neutral-900'
@@ -184,6 +190,8 @@ export default function VisitDetails() {
               </button>
               <button
                 onClick={() => updateVisitDetails({ hasOtherVisitors: false })}
+                aria-label="Answer no to other visitors in the service"
+                aria-pressed={visitDetails.hasOtherVisitors === false}
                 className={`flex-1 py-3 rounded-lg border font-medium transition-all
                   ${visitDetails.hasOtherVisitors === false
                     ? 'bg-neutral-900 text-white border-neutral-900'
@@ -274,7 +282,7 @@ export default function VisitDetails() {
                      hover:bg-neutral-800 disabled:bg-neutral-300 disabled:cursor-not-allowed
                      transition-colors text-base"
           >
-            {isVisitDetailsSaved ? 'Saved - Continue to Audit' : 'Save & Continue to Audit'}
+            {isVisitDetailsSaved ? 'Saved – Continue to Care Systems' : 'Save & Continue to Care Systems'}
           </button>
         </div>
 

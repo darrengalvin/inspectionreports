@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useAudit } from '../context/AuditContext';
 import { 
   ServiceType, 
@@ -9,6 +9,7 @@ import {
   COUNTRY_LABELS,
   requiresVisitDetails 
 } from '../types/audit';
+import { getAllSavedAudits } from '../../lib/storage';
 
 export default function AuditSetup() {
   const {
@@ -21,8 +22,17 @@ export default function AuditSetup() {
     isSetupValid,
     saveSetup,
     isSetupSaved,
-    setCurrentStep
+    setCurrentStep,
+    loadSavedAudit,
   } = useAudit();
+
+  const filteredAudits = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const q = searchQuery.toLowerCase();
+    return getAllSavedAudits().filter(
+      a => a.auditNumber.toLowerCase().includes(q) || a.serviceName.toLowerCase().includes(q)
+    );
+  }, [searchQuery]);
 
   const serviceTypes: ServiceType[] = [
     'prep4life',
@@ -38,7 +48,7 @@ export default function AuditSetup() {
     if (requiresVisitDetails(setup.serviceType)) {
       setCurrentStep('visit-details');
     } else {
-      setCurrentStep('audit');
+      setCurrentStep('care-systems');
     }
   };
 
@@ -72,10 +82,41 @@ export default function AuditSetup() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by audit number or service name..."
+            aria-label="Search existing audits"
             className="w-full px-4 py-3 border border-neutral-200 rounded-lg text-base
                      focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent
                      placeholder:text-neutral-400"
           />
+          {filteredAudits.length > 0 && (
+            <div className="mt-2 border border-neutral-200 rounded-lg overflow-hidden">
+              {filteredAudits.map(audit => (
+                <button
+                  key={audit.auditNumber}
+                  onClick={() => {
+                    loadSavedAudit(audit.auditNumber);
+                    setSearchQuery('');
+                  }}
+                  className="w-full text-left px-4 py-3 hover:bg-neutral-50 border-b border-neutral-100 last:border-b-0 transition-colors"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-neutral-900">{audit.serviceName}</p>
+                      <p className="text-xs text-neutral-500">Ref: {audit.auditNumber} &middot; {audit.country}</p>
+                    </div>
+                    <div className="text-right">
+                      <span className={`text-sm font-semibold ${audit.passed ? 'text-green-600' : 'text-red-600'}`}>
+                        {audit.percentage}%
+                      </span>
+                      <p className="text-xs text-neutral-400">{new Date(audit.dateCompleted).toLocaleDateString('en-GB')}</p>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+          {searchQuery.trim() && filteredAudits.length === 0 && (
+            <p className="mt-2 text-sm text-neutral-500">No saved audits match your search.</p>
+          )}
         </div>
 
         <div className="space-y-6">
@@ -238,7 +279,7 @@ export default function AuditSetup() {
           <p className="text-center text-sm text-neutral-500 mt-6">
             {requiresVisitDetails(setup.serviceType)
               ? 'You\'ll be asked to complete visit details next.'
-              : 'After saving, you\'ll proceed directly to the audit sections.'}
+              : 'After saving, you\'ll proceed to care systems & observation.'}
           </p>
         )}
       </div>
