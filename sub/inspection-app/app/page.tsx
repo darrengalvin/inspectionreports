@@ -173,7 +173,7 @@ export default function Home() {
       {/* Hero */}
       <section className="pt-28 pb-20 px-6">
         <div className="max-w-5xl mx-auto text-center">
-          <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={400} height={400} className="h-28 w-auto mx-auto mb-6" priority />
+          <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={760} height={246} className="h-16 sm:h-20 w-auto mx-auto mb-6" priority />
           <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 text-sm font-medium px-4 py-1.5 rounded-full mb-8">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -349,7 +349,7 @@ export default function Home() {
           <div className="bg-neutral-50 rounded-2xl p-8 sm:p-10 border border-neutral-100">
             <div className="flex flex-col sm:flex-row gap-8 items-start">
               <div className="flex-shrink-0">
-                <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={400} height={400} className="w-32 h-32 object-contain" />
+                <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={760} height={246} className="h-14 w-auto" />
               </div>
               <div>
                 <p className="text-neutral-600 leading-relaxed mb-4">
@@ -379,7 +379,7 @@ export default function Home() {
       <section id="contact" className="py-20 px-6 bg-neutral-900">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-10">
-            <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={400} height={400} className="h-28 w-auto mx-auto mb-4 brightness-0 invert" />
+            <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={760} height={246} className="h-14 w-auto mx-auto mb-6 brightness-0 invert" />
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
               Ready to raise the standard?
             </h2>
@@ -430,7 +430,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-3">
-              <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={400} height={400} className="h-16 w-auto opacity-60" />
+              <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={760} height={246} className="h-8 w-auto opacity-60" />
             </div>
             <div className="flex items-center gap-6">
               <Link href="#services" className="text-sm text-neutral-400 hover:text-neutral-600 transition-colors">Services</Link>

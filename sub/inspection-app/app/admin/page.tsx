@@ -201,7 +201,7 @@ function AdminContent() {
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center px-6">
         <div className="w-full max-w-sm">
           <div className="text-center mb-8">
-            <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={400} height={400} className="h-20 w-auto mx-auto mb-4" />
+            <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={760} height={246} className="h-14 w-auto mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-neutral-900">Admin Access</h1>
             <p className="text-neutral-500 text-sm mt-1">Sign in to access audit tools</p>
           </div>
@@ -278,7 +278,7 @@ function AdminContent() {
       <header className="bg-white border-b border-neutral-200 sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={400} height={400} className="h-14 w-auto" />
+            <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={760} height={246} className="h-9 w-auto" />
             <span className="text-base font-black tracking-tight text-neutral-900 ml-1">ADMIN</span>
           </div>
           <div className="flex items-center gap-3">

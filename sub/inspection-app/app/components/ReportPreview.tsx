@@ -859,7 +859,7 @@ export default function ReportPreview({ data, onBack }: ReportPreviewProps) {
         <footer className="mt-14 pt-5 border-t-2 border-neutral-900 print-avoid-break">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4">
             <div>
-              <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={400} height={400} className="h-16 w-auto" />
+              <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={760} height={246} className="h-10 w-auto" />
             </div>
             <div className="text-left sm:text-right text-xs text-neutral-500 space-y-0.5">
               <p className="font-medium text-neutral-700">DPB Care Consultancy</p>
