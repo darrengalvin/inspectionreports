@@ -528,8 +528,8 @@ export default function AuditReport() {
         <footer className="mt-12 pt-6 border-t-2 border-neutral-900">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4">
             <div className="flex items-center gap-4">
-              <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={140} height={35} className="h-9 w-auto" />
-              <Image src="/qm7-logo-full.jpg" alt="QM7" width={80} height={35} className="h-9 w-auto rounded" />
+              <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={400} height={400} className="h-16 w-auto" />
+              <Image src="/qm7-logo-full.jpg" alt="QM7" width={160} height={70} className="h-12 w-auto rounded" />
             </div>
             <div className="text-left sm:text-right text-xs text-neutral-500 space-y-0.5">
               <p className="font-medium text-neutral-700">DPB Care Consultancy</p>
@@ -581,8 +581,8 @@ export default function AuditReport() {
               </div>
 
               {/* DPB Logo & Branding */}
-              <div className="px-8 pt-6 pb-4">
-                <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={280} height={70} className="h-16 w-auto" />
+              <div className="px-8 pt-4 pb-2">
+                <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={400} height={400} className="h-24 w-auto" />
               </div>
 
               {/* Main Body — Score Circles + QA Stamp */}

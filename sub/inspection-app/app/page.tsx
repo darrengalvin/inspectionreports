@@ -145,9 +145,9 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md z-50 border-b border-neutral-100">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={160} height={40} className="h-10 w-auto" priority />
+        <div className="max-w-6xl mx-auto px-6 py-2 flex items-center justify-between">
+          <div className="flex items-center">
+            <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={400} height={400} className="h-20 w-auto -my-2" priority />
           </div>
           <div className="flex items-center gap-2">
             <Link
@@ -350,7 +350,7 @@ export default function Home() {
           <div className="bg-neutral-50 rounded-2xl p-8 sm:p-10 border border-neutral-100">
             <div className="flex flex-col sm:flex-row gap-8 items-start">
               <div className="flex-shrink-0">
-                <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={120} height={120} className="w-20 h-20 object-contain rounded-2xl" />
+                <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={400} height={400} className="w-32 h-32 object-contain" />
               </div>
               <div>
                 <p className="text-neutral-600 leading-relaxed mb-4">
@@ -380,7 +380,7 @@ export default function Home() {
       <section id="contact" className="py-20 px-6 bg-neutral-900">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-10">
-            <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={200} height={50} className="h-12 w-auto mx-auto mb-6 brightness-0 invert" />
+            <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={400} height={400} className="h-28 w-auto mx-auto mb-4 brightness-0 invert" />
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
               Ready to raise the standard?
             </h2>
@@ -431,7 +431,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-3">
-              <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={120} height={30} className="h-8 w-auto opacity-50" />
+              <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={400} height={400} className="h-16 w-auto opacity-60" />
             </div>
             <div className="flex items-center gap-6">
               <Link href="#services" className="text-sm text-neutral-400 hover:text-neutral-600 transition-colors">Services</Link>
