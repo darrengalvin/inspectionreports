@@ -47,6 +47,35 @@ export default function IndividualForm() {
           </div>
           <h1 className="text-3xl font-semibold text-neutral-900 mb-3">Individual Assessment</h1>
           <p className="text-neutral-600">Enter the individual&apos;s information and support needs.</p>
+          <button
+            onClick={() => updateIndividual({
+              name: 'Michael Thompson',
+              dateOfBirth: '1998-03-15',
+              referralSource: 'NHS Community Learning Disability Team',
+              currentPlacement: 'Residential school (transitioning to adult services)',
+              primaryDiagnosis: 'Autism Spectrum Disorder',
+              secondaryDiagnosis: 'ADHD',
+              communicationNeeds: 'Verbal with some Makaton signs. Benefits from visual timetables and social stories.',
+              mobilityNeeds: 'Fully mobile. Sensory processing difficulties may affect spatial awareness.',
+              personalCareLevel: 'medium',
+              medicationComplexity: 'low',
+              behaviourSupportLevel: 'high',
+              mentalHealthNeeds: 'medium',
+              communityAccessLevel: 'medium',
+              socialInteractionLevel: 'high',
+              nightSupportLevel: 'low',
+              personalityTraits: 'Enjoys routine and predictability. Can be sociable with familiar people. Prefers small group settings.',
+              interests: 'Trains and transport, cooking, swimming, video games',
+              triggers: 'Sudden changes to routine, loud unexpected noises, crowded environments',
+              preferences: 'Quiet room away from communal areas. Prefers structured mealtimes. Likes access to outdoor space.',
+            })}
+            className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-700 text-xs font-medium rounded-full hover:bg-amber-200 transition-colors"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            Auto-fill for Demo
+          </button>
         </div>
 
         <div className="space-y-6">

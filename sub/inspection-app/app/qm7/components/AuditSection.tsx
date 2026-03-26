@@ -81,6 +81,23 @@ export default function AuditSection({ section, onNext, onPrevious, isFirst, isL
           <p className="text-neutral-600">
             ({section.maxScore} points)
           </p>
+          <button
+            onClick={() => {
+              section.questions.forEach((q, i) => {
+                updateSectionAnswer(section.id, q.id, i % 5 !== 3);
+              });
+              const minWords = section.wordCountMin || 50;
+              const filler = `The service demonstrates ${section.title.toLowerCase()} to a good standard overall. During the visit, staff were observed supporting individuals in a person-centred manner with appropriate documentation and recording. There are some areas for development which have been noted in the action plan. The management team showed awareness of key requirements and were responsive to recommendations. Evidence was reviewed including policies, training records, and care documentation which supported the responses given during the audit. Overall, this area reflects a reasonable level of compliance with the expected standards and frameworks applicable to the service.`;
+              const words = filler.split(' ');
+              updateSectionNarrative(section.id, words.slice(0, Math.max(minWords, 60)).join(' '));
+            }}
+            className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-700 text-xs font-medium rounded-full hover:bg-amber-200 transition-colors"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            Auto-fill for Demo
+          </button>
         </div>
 
         {/* Score Display */}

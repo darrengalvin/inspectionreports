@@ -45,6 +45,27 @@ export default function CareSystemsObservation() {
           <p className="text-neutral-600">
             Select the care support system in use and complete the observation audit.
           </p>
+          <button
+            onClick={() => {
+              updateObservationAudit({
+                careSupportSystem: 'nourish',
+                recentCareNotes: true,
+                redOverdueDates: false,
+                staffSystemSkill: 'good',
+                notificationCount: '6-10',
+                effectiveSystem: true,
+                observationOverview: 'The service uses Nourish effectively. Staff demonstrated good knowledge of the system and were able to navigate to key records quickly. Care notes were up to date with detailed entries from the last 24 hours. The system is well-organised with clear categories for support plans, daily notes, and medication records.',
+                hasRecommendations: true,
+                recommendationsText: 'Consider additional training for newer staff members on generating reports from the system. The notification management could be improved to reduce alert fatigue.',
+              });
+            }}
+            className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-700 text-xs font-medium rounded-full hover:bg-amber-200 transition-colors"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            Auto-fill for Demo
+          </button>
         </div>
 
         <div className="space-y-8">

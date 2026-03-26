@@ -19,6 +19,8 @@ export interface AuditSetupData {
   serviceType: ServiceType | null;
   country: Country | null;
   serviceName: string;
+  providerName: string;
+  auditorName: string;
   keyContact1: Contact;
   keyContact2: Contact;
 }
@@ -110,7 +112,7 @@ export const ACCREDITATION_STATUS_LABELS: Record<string, string> = {
   'expired': 'Expired',
 };
 
-// Action Plan (AI-generated when below pass threshold)
+// Action Plan (generated when below pass threshold)
 export interface ActionPlanItem {
   id: string;
   area: string;

@@ -1,4 +1,4 @@
-// Saved AI Analysis - Generated analysis of inspection questions vs authoritative guidance
+// Saved Analysis - Generated analysis of inspection questions vs authoritative guidance
 
 export const savedAnalysis = {
   generatedAt: '2026-02-04',

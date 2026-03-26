@@ -1,60 +1,55 @@
 import { NextResponse } from 'next/server';
-import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { join } from 'path';
-
-const DATA_FILE = join(process.cwd(), '.endorsed-services.json');
-
-interface EndorsedService {
-  referenceNumber: string;
-  auditNumber: string;
-  serviceName: string;
-  percentage: number;
-  dateIssued: string;
-  country: string;
-  endorsedBy: string;
-}
-
-function loadServices(): EndorsedService[] {
-  try {
-    if (existsSync(DATA_FILE)) {
-      return JSON.parse(readFileSync(DATA_FILE, 'utf-8'));
-    }
-  } catch { /* empty */ }
-  return [];
-}
-
-function saveServices(services: EndorsedService[]): void {
-  writeFileSync(DATA_FILE, JSON.stringify(services, null, 2));
-}
+import { createServiceClient } from '../../lib/supabase-server';
 
 export async function GET() {
-  const services = loadServices();
-  return NextResponse.json({ services });
+  const supabase = createServiceClient();
+  const { data, error } = await supabase
+    .from('endorsed_services')
+    .select('*')
+    .order('date_issued', { ascending: false });
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ services: data });
 }
 
 export async function POST(request: Request) {
   try {
-    const service: EndorsedService = await request.json();
+    const body = await request.json();
 
-    if (!service.referenceNumber || !service.serviceName) {
+    if (!body.referenceNumber || !body.serviceName) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const services = loadServices();
-    const existingIndex = services.findIndex(s => s.referenceNumber === service.referenceNumber);
+    const supabase = createServiceClient();
 
-    if (existingIndex >= 0) {
-      services[existingIndex] = service;
-    } else {
-      services.push(service);
+    const { error } = await supabase.from('endorsed_services').upsert(
+      {
+        reference_number: body.referenceNumber,
+        audit_number: body.auditNumber,
+        service_name: body.serviceName,
+        percentage: body.percentage,
+        date_issued: body.dateIssued || new Date().toISOString(),
+        country: body.country || '',
+        endorsed_by: body.endorsedBy || 'DPB Quality Management',
+      },
+      { onConflict: 'reference_number' }
+    );
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    saveServices(services);
+    const { count } = await supabase
+      .from('endorsed_services')
+      .select('*', { count: 'exact', head: true });
 
-    return NextResponse.json({ success: true, totalEndorsed: services.length });
-  } catch (error) {
+    return NextResponse.json({ success: true, totalEndorsed: count });
+  } catch (err) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : 'Unknown error' },
+      { error: err instanceof Error ? err.message : 'Unknown error' },
       { status: 500 }
     );
   }

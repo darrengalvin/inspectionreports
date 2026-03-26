@@ -39,6 +39,29 @@ export default function FacilityForm() {
           </div>
           <h1 className="text-3xl font-semibold text-neutral-900 mb-3">Service Facility</h1>
           <p className="text-neutral-600">Enter the service facility details for matching.</p>
+          <button
+            onClick={() => updateFacility({
+              name: 'Sunrise Supported Living',
+              location: 'Manchester',
+              totalBeds: 6,
+              currentOccupancy: 4,
+              maxSupportLevel: 'high',
+              specialisms: ['Autism Spectrum', 'Learning Disabilities', 'Challenging Behaviour'],
+              environmentType: 'suburban',
+              accessibility: 'Fully wheelchair accessible, ground floor throughout',
+              staffingRatio: '1:2 (day), 1:3 (night) with waking night staff',
+              hasWakingNight: true,
+              hasSensoryRoom: true,
+              hasCommunityAccess: true,
+              nearPublicTransport: true,
+            })}
+            className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-700 text-xs font-medium rounded-full hover:bg-amber-200 transition-colors"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            Auto-fill for Demo
+          </button>
         </div>
 
         <div className="space-y-6">

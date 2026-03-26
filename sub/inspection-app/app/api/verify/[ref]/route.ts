@@ -1,27 +1,5 @@
 import { NextResponse } from 'next/server';
-import { readFileSync, existsSync } from 'fs';
-import { join } from 'path';
-
-const DATA_FILE = join(process.cwd(), '.endorsed-services.json');
-
-interface EndorsedService {
-  referenceNumber: string;
-  auditNumber: string;
-  serviceName: string;
-  percentage: number;
-  dateIssued: string;
-  country: string;
-  endorsedBy: string;
-}
-
-function loadEndorsedServices(): EndorsedService[] {
-  try {
-    if (existsSync(DATA_FILE)) {
-      return JSON.parse(readFileSync(DATA_FILE, 'utf-8'));
-    }
-  } catch { /* empty */ }
-  return [];
-}
+import { createServiceClient } from '../../../lib/supabase-server';
 
 export async function GET(
   _request: Request,
@@ -36,10 +14,15 @@ export async function GET(
     );
   }
 
-  const services = loadEndorsedServices();
-  const service = services.find(s => s.referenceNumber === ref);
+  const supabase = createServiceClient();
 
-  if (!service) {
+  const { data, error } = await supabase
+    .from('endorsed_services')
+    .select('service_name, percentage, date_issued, country, endorsed_by, audit_number')
+    .eq('reference_number', ref)
+    .single();
+
+  if (error || !data) {
     return NextResponse.json({
       found: false,
       message: 'No endorsed service found with this reference number. The service may not have been endorsed yet, or the reference may be incorrect.',
@@ -49,12 +32,12 @@ export async function GET(
   return NextResponse.json({
     found: true,
     service: {
-      serviceName: service.serviceName,
-      percentage: service.percentage,
-      dateIssued: service.dateIssued,
-      country: service.country,
-      endorsedBy: service.endorsedBy,
-      auditNumber: service.auditNumber,
+      serviceName: data.service_name,
+      percentage: data.percentage,
+      dateIssued: data.date_issued,
+      country: data.country,
+      endorsedBy: data.endorsed_by,
+      auditNumber: data.audit_number,
     },
   });
 }

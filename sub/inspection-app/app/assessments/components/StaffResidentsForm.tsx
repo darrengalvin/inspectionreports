@@ -29,6 +29,25 @@ export default function StaffResidentsForm() {
             </div>
             <h1 className="text-3xl font-semibold text-neutral-900 mb-3">Staff Profile</h1>
             <p className="text-neutral-600">Enter the service&apos;s staff skills and training information.</p>
+            <button
+              onClick={() => updateStaffProfile({
+                totalStaff: 12,
+                averageExperienceYears: 4,
+                trainingCompliance: 94,
+                trainedInPbs: true,
+                trainedInMedication: true,
+                trainedInEpilepsy: true,
+                trainedInAutism: true,
+                trainedInMentalHealth: true,
+                trainedInManualHandling: true,
+              })}
+              className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-700 text-xs font-medium rounded-full hover:bg-amber-200 transition-colors"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              Auto-fill for Demo
+            </button>
           </div>
 
           <div className="space-y-6">
@@ -96,6 +115,30 @@ export default function StaffResidentsForm() {
           </div>
           <h1 className="text-3xl font-semibold text-neutral-900 mb-3">Current Residents</h1>
           <p className="text-neutral-600">Add current residents to assess compatibility.</p>
+          <button
+            onClick={() => {
+              const demoResidents = [
+                { name: 'Emma W.', supportLevel: 'medium' as const, personalityNotes: 'Sociable, enjoys group activities', triggers: 'Changes to routine' },
+                { name: 'Ryan K.', supportLevel: 'high' as const, personalityNotes: 'Quiet, prefers 1:1 interaction', triggers: 'Loud noises, large groups' },
+                { name: 'Sophie L.', supportLevel: 'low' as const, personalityNotes: 'Independent, outgoing', triggers: 'None significant' },
+                { name: 'James P.', supportLevel: 'medium' as const, personalityNotes: 'Enjoys music, needs structured day', triggers: 'Boredom, unstructured time' },
+              ];
+              demoResidents.forEach((r, i) => {
+                if (i < residents.length) {
+                  updateResident(i, r);
+                } else {
+                  addResident();
+                  setTimeout(() => updateResident(i, r), 50 * (i + 1));
+                }
+              });
+            }}
+            className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-700 text-xs font-medium rounded-full hover:bg-amber-200 transition-colors"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            Auto-fill for Demo
+          </button>
         </div>
 
         <div className="space-y-6">

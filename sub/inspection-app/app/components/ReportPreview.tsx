@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
+import Image from 'next/image';
 import {
   RadarChart,
   Radar,
@@ -423,7 +424,6 @@ export default function ReportPreview({ data, onBack }: ReportPreviewProps) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
             Executive Summary
-            {aiSummary && <span className="text-[10px] text-neutral-500 bg-neutral-100 px-1.5 py-0.5 rounded font-medium">AI</span>}
           </h2>
           {aiLoading && !summary ? (
             <div className="flex items-center gap-2 text-neutral-400 py-2">
@@ -855,11 +855,21 @@ export default function ReportPreview({ data, onBack }: ReportPreviewProps) {
           </div>
         </div>
 
-        {/* ── Footer ── */}
+        {/* ── Footer / Letterhead ── */}
         <footer className="mt-14 pt-5 border-t-2 border-neutral-900 print-avoid-break">
-          <div className="flex flex-col sm:flex-row sm:justify-between text-xs text-neutral-500 mb-3">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4">
+            <div>
+              <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={140} height={35} className="h-9 w-auto" />
+            </div>
+            <div className="text-left sm:text-right text-xs text-neutral-500 space-y-0.5">
+              <p className="font-medium text-neutral-700">DPB Care Consultancy</p>
+              <p>184, 200 Pensby Road, Heswall</p>
+              <p>Birkenhead, Wirral CH60 7RJ</p>
+            </div>
+          </div>
+          <div className="flex flex-col sm:flex-row sm:justify-between text-xs text-neutral-500 pt-3 border-t border-neutral-200 mb-3">
             <p>{data.id} &middot; Confidential &middot; Not for distribution without consent</p>
-            <p>Generated {new Date().toLocaleDateString('en-GB', {
+            <p>{new Date().toLocaleDateString('en-GB', {
               day: 'numeric', month: 'long', year: 'numeric',
             })}</p>
           </div>
@@ -875,6 +885,9 @@ export default function ReportPreview({ data, onBack }: ReportPreviewProps) {
             contains findings and recommendations based on evidence gathered during the inspection. The
             contents should not be shared with third parties without prior written consent. All resident
             identifiers have been anonymised.
+          </p>
+          <p className="text-[10px] text-neutral-300 mt-2">
+            &copy; {new Date().getFullYear()} DPB Care Consultancy. All rights reserved.
           </p>
         </footer>
 

@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Supported Housing Quality Inspection",
-  description: "Independent quality inspection and reporting platform for supported housing providers. Conduct resident-centred inspections aligned with CQC, RSH, and Housing Ombudsman standards.",
+  title: "DPB Care Consultancy — Quality Matters",
+  description: "Independent quality audits, inspections, and placement assessments for care services across the UK. Expert-led action plans, endorsed certificates, and regulatory compliance tools aligned with CQC, Care Inspectorate, CIW, and RQIA standards.",
 };
 
 export default function RootLayout({

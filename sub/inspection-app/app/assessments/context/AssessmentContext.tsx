@@ -136,6 +136,20 @@ export function AssessmentProvider({ children }: { children: React.ReactNode }) 
     const result = calculateMatch(individual, facility, staffProfile, residents);
     setMatchingResult(result);
     setCurrentStep('results');
+
+    fetch('/api/assessments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        individualName: individual.name,
+        facilityName: facility.name,
+        supportLevel: result.calculatedSupportLevel,
+        overallPercentage: result.overallPercentage,
+        dateCompleted: new Date().toISOString(),
+        hasTransitionPlan: false,
+        assessmentData: { individual, facility, staffProfile, residents, matchingResult: result },
+      }),
+    }).catch(() => {});
   }, [individual, facility, staffProfile, residents]);
 
   const generateTransition = useCallback((moveDate: string) => {

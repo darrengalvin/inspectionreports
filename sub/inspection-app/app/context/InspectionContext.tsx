@@ -186,7 +186,7 @@ export function InspectionProvider({ children }: { children: React.ReactNode }) 
       ? new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
       : undefined;
 
-    return {
+    const reportData: InspectionData = {
       id: `QA-${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}-${Date.now().toString(36).slice(-4).toUpperCase()}`,
       propertyName,
       providerName,
@@ -201,6 +201,20 @@ export function InspectionProvider({ children }: { children: React.ReactNode }) 
       inspector: inspectorName ? { name: inspectorName, role: 'Lead Quality Inspector' } : undefined,
       followUpDate: followUp,
     };
+
+    fetch('/api/inspections', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        propertyName,
+        providerName,
+        overallScore: reportData.overallScore,
+        dateCompleted: new Date().toISOString(),
+        reportData,
+      }),
+    }).catch(() => {});
+
+    return reportData;
   }, [propertyName, providerName, residentsInterviewed, totalResidents, sectionResponses, actions, inspectorName]);
 
   const saveCurrentState = useCallback(() => {

@@ -52,6 +52,18 @@ export default function AuditSetup() {
     }
   };
 
+  const handleAutoFill = () => {
+    setServiceType('supported-living');
+    setCountry('england');
+    updateSetup({
+      serviceName: 'Sunrise Supported Living',
+      providerName: 'Aspirations Care',
+      auditorName: 'Dave Burke',
+      keyContact1: { name: 'Sarah Mitchell', email: 'sarah@sunrisesl.co.uk', phone: '07712 345678' },
+      keyContact2: { name: 'James Walker', email: 'james@sunrisesl.co.uk', phone: '07891 234567' },
+    });
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Audit Reference Box - Top Right */}
@@ -70,6 +82,15 @@ export default function AuditSetup() {
           <p className="text-neutral-600">
             Create a new quality management audit by completing the details below.
           </p>
+          <button
+            onClick={handleAutoFill}
+            className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-700 text-xs font-medium rounded-full hover:bg-amber-200 transition-colors"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            Auto-fill for Demo
+          </button>
         </div>
 
         {/* Search Box */}
@@ -175,7 +196,39 @@ export default function AuditSetup() {
               type="text"
               value={setup.serviceName}
               onChange={(e) => updateSetup({ serviceName: e.target.value })}
-              placeholder="Enter the service name"
+              placeholder="e.g. Strawberry House"
+              className="w-full px-4 py-3 border border-neutral-200 rounded-lg text-base
+                       focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent
+                       placeholder:text-neutral-400"
+            />
+          </div>
+
+          {/* Care Provider Name */}
+          <div>
+            <label className="block text-sm font-medium text-neutral-700 mb-2">
+              Care Provider Name
+            </label>
+            <input
+              type="text"
+              value={setup.providerName}
+              onChange={(e) => updateSetup({ providerName: e.target.value })}
+              placeholder="e.g. Aspirations Care"
+              className="w-full px-4 py-3 border border-neutral-200 rounded-lg text-base
+                       focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent
+                       placeholder:text-neutral-400"
+            />
+          </div>
+
+          {/* Auditor Name */}
+          <div>
+            <label className="block text-sm font-medium text-neutral-700 mb-2">
+              Lead Auditor
+            </label>
+            <input
+              type="text"
+              value={setup.auditorName}
+              onChange={(e) => updateSetup({ auditorName: e.target.value })}
+              placeholder="Name of the auditor conducting the audit"
               className="w-full px-4 py-3 border border-neutral-200 rounded-lg text-base
                        focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:border-transparent
                        placeholder:text-neutral-400"

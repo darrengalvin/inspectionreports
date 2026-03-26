@@ -21,6 +21,21 @@ export default function VisitDetails() {
     }
   };
 
+  const handleAutoFill = () => {
+    updateVisitDetails({
+      dateOfVisit: new Date().toISOString().split('T')[0],
+      timeOfVisit: '09:30',
+      greeterName: 'Karen Phillips',
+      idChecked: true,
+      clientsInService: 8,
+      staffOnShift: 4,
+      hasOtherVisitors: false,
+      visitorNames: ['', '', ''],
+      clientFocus1: 'Michael Thompson',
+      clientFocus2: 'Lucy Adams',
+    });
+  };
+
   const clientOptions = Array.from({ length: 50 }, (_, i) => i + 1);
   const staffOptions = Array.from({ length: 30 }, (_, i) => i + 1);
 
@@ -52,6 +67,15 @@ export default function VisitDetails() {
           <p className="text-sm text-neutral-500 mt-2">
             Service: {setup.serviceName}
           </p>
+          <button
+            onClick={handleAutoFill}
+            className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-700 text-xs font-medium rounded-full hover:bg-amber-200 transition-colors"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            Auto-fill for Demo
+          </button>
         </div>
 
         <div className="space-y-6">

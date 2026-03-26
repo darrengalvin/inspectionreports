@@ -64,6 +64,24 @@ export default function Accreditations() {
           <p className="text-neutral-600">
             Record the service&apos;s current accreditation status for each framework.
           </p>
+          <button
+            onClick={() => {
+              updateAccreditations({
+                cpi: 'yes',
+                bildPbs: 'in-progress',
+                stomp: 'yes',
+                omg: 'no',
+                rrn: 'yes',
+                bildObservationNotes: 'The service has begun implementing PBS across all supported living properties. A PBS lead has been appointed and is currently working through the BILD accreditation process. Functional assessments are conducted for all individuals with behaviours of concern.',
+              });
+            }}
+            className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-700 text-xs font-medium rounded-full hover:bg-amber-200 transition-colors"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            Auto-fill for Demo
+          </button>
         </div>
 
         <div className="space-y-6">

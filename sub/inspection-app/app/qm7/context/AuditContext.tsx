@@ -36,7 +36,7 @@ import {
 
 let globalSequence = 100;
 
-interface SerializedAuditState {
+export interface SerializedAuditState {
   setup: AuditSetupData;
   visitDetails: VisitDetails;
   observationAudit: ObservationAuditData;
@@ -108,6 +108,10 @@ interface AuditContextType {
 
   saveCurrentState: () => void;
   loadSavedAudit: (auditNumber: string) => void;
+  loadFromSupabase: (data: SerializedAuditState) => void;
+  supabaseAuditId: string | null;
+  setSupabaseAuditId: (id: string | null) => void;
+  saveBackToSupabase: () => Promise<boolean>;
 }
 
 const AuditContext = createContext<AuditContextType | null>(null);
@@ -119,6 +123,8 @@ const initialSetup: AuditSetupData = {
   serviceType: null,
   country: null,
   serviceName: '',
+  providerName: '',
+  auditorName: '',
   keyContact1: { ...emptyContact },
   keyContact2: { ...emptyContact }
 };
@@ -152,6 +158,7 @@ export function AuditProvider({ children }: { children: React.ReactNode }) {
   const [sections, setSections] = useState<AuditSection[]>([]);
   const [actionPlan, setActionPlan] = useState<ActionPlan | null>(null);
   const [endorsement, setEndorsement] = useState<AuditEndorsement | null>(null);
+  const [supabaseAuditId, setSupabaseAuditId] = useState<string | null>(null);
   const hasLoadedRef = useRef(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -423,6 +430,42 @@ export function AuditProvider({ children }: { children: React.ReactNode }) {
       passed: pct >= PASS_THRESHOLD,
     });
 
+    const followUpDate = pct < PASS_THRESHOLD
+      ? new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+      : undefined;
+
+    const actionPlanItems = pct < PASS_THRESHOLD && actionPlan
+      ? actionPlan.items.map(item => ({
+          area: item.area,
+          action: item.action,
+          priority: item.priority,
+          deadline: item.deadline,
+          completed: false,
+        }))
+      : undefined;
+
+    fetch('/api/audits', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        auditNumber: setup.auditNumber,
+        serviceName: setup.serviceName,
+        country: setup.country ?? '',
+        percentage: pct,
+        dateCompleted: new Date().toISOString(),
+        passed: pct >= PASS_THRESHOLD,
+        followUpDate,
+        actionPlanItems,
+        auditData: {
+          setup,
+          visitDetails,
+          observationAudit,
+          accreditations,
+          sectionDataEntries: serializeMap(sectionData),
+        },
+      }),
+    }).catch(() => {});
+
     if (pct >= PASS_THRESHOLD) {
       const endorsed = {
         referenceNumber: ref,
@@ -442,7 +485,7 @@ export function AuditProvider({ children }: { children: React.ReactNode }) {
     }
 
     return newEndorsement;
-  }, [getPercentage, setup.auditNumber, setup.serviceName, setup.country]);
+  }, [getPercentage, setup, visitDetails, observationAudit, accreditations, sectionData]);
 
   const saveCurrentState = useCallback(() => {
     const serialized: SerializedAuditState = {
@@ -489,6 +532,54 @@ export function AuditProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const loadFromSupabase = useCallback((data: SerializedAuditState) => {
+    setSetup(data.setup);
+    setVisitDetails(data.visitDetails);
+    setObservationAudit(data.observationAudit);
+    setAccreditationsState(data.accreditations);
+    setCurrentStep(data.currentStep);
+    setCurrentSectionIndex(data.currentSectionIndex);
+    setActionPlan(data.actionPlan);
+    setEndorsement(data.endorsement);
+    setIsSetupSaved(data.isSetupSaved);
+    setIsVisitDetailsSaved(data.isVisitDetailsSaved);
+    setIsObservationSaved(data.isObservationSaved);
+    setIsAccreditationsSaved(data.isAccreditationsSaved);
+    if (data.sectionDataEntries?.length > 0) {
+      setSectionData(deserializeMap(data.sectionDataEntries));
+    }
+  }, []);
+
+  const saveBackToSupabase = useCallback(async (): Promise<boolean> => {
+    if (!supabaseAuditId) return false;
+    const pct = getPercentage();
+    const serialized: SerializedAuditState = {
+      setup, visitDetails, observationAudit, accreditations,
+      currentStep, currentSectionIndex,
+      sectionDataEntries: serializeMap(sectionData),
+      actionPlan, endorsement,
+      isSetupSaved, isVisitDetailsSaved, isObservationSaved, isAccreditationsSaved,
+    };
+    try {
+      const res = await fetch('/api/audits', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: supabaseAuditId,
+          auditNumber: setup.auditNumber,
+          serviceName: setup.serviceName,
+          country: setup.country ?? '',
+          percentage: pct,
+          passed: pct >= PASS_THRESHOLD,
+          auditData: serialized,
+        }),
+      });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  }, [supabaseAuditId, setup, visitDetails, observationAudit, accreditations, currentStep, currentSectionIndex, sectionData, actionPlan, endorsement, isSetupSaved, isVisitDetailsSaved, isObservationSaved, isAccreditationsSaved, getPercentage]);
+
   const searchResults: AuditSetupData[] = [];
 
   return (
@@ -510,6 +601,7 @@ export function AuditProvider({ children }: { children: React.ReactNode }) {
       saveSetup, saveVisitDetails,
       isSetupSaved, isVisitDetailsSaved,
       saveCurrentState, loadSavedAudit,
+      loadFromSupabase, supabaseAuditId, setSupabaseAuditId, saveBackToSupabase,
     }}>
       {children}
     </AuditContext.Provider>

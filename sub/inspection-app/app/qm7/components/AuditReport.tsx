@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import QRCode from 'qrcode';
 import { useAudit } from '../context/AuditContext';
 import {
@@ -155,16 +156,17 @@ export default function AuditReport() {
           ← Back to Audit
         </button>
 
-        {/* Header with DPB branding placeholder */}
+        {/* Header */}
         <header className="border-b border-neutral-200 pb-8 mb-10">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-12 h-12 bg-neutral-900 rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">QM7</span>
-                </div>
+                <Image src="/qm7-logo-icon.jpg" alt="QM7" width={48} height={48} className="w-12 h-12 rounded-xl object-cover" />
                 <div>
-                  <h1 className="text-3xl font-semibold text-neutral-900">{setup.serviceName}</h1>
+                  <h1 className="text-3xl font-semibold text-neutral-900">
+                    {setup.serviceName}
+                    {setup.providerName && <span className="text-neutral-400"> — {setup.providerName}</span>}
+                  </h1>
                   <p className="text-neutral-600">Quality Management Audit Report</p>
                 </div>
               </div>
@@ -182,6 +184,7 @@ export default function AuditReport() {
                   day: 'numeric', month: 'long', year: 'numeric'
                 })}</p>
               )}
+              {setup.auditorName && <p><strong>Lead Auditor:</strong> {setup.auditorName}</p>}
               <p><strong>Key Contact:</strong> {setup.keyContact1.name}</p>
               {currentEndorsement && (
                 <p className="font-mono text-xs mt-2 bg-neutral-100 px-2 py-1 rounded">
@@ -407,23 +410,19 @@ export default function AuditReport() {
                 </div>
 
                 <div className="p-6 bg-white">
-                  <h4 className="text-sm font-medium text-neutral-700 mb-3">Questions</h4>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-2">
-                    {section.questions.map((question: { id: string; number: number; text: string }) => {
-                      const answer = data?.answers.find(a => a.questionId === question.id);
-                      return (
-                        <div
-                          key={question.id}
-                          className={`px-3 py-2 rounded text-xs font-medium text-center ${
-                            answer?.answer === true ? 'bg-green-100 text-green-700'
-                            : answer?.answer === false ? 'bg-red-100 text-red-700'
-                            : 'bg-neutral-100 text-neutral-500'
-                          }`}
-                        >
-                          Q{question.number}: {answer?.answer === true ? 'Yes' : answer?.answer === false ? 'No' : '—'}
-                        </div>
-                      );
-                    })}
+                  <div className="flex items-center gap-4 text-sm text-neutral-600">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-3 h-3 rounded-full bg-green-100 border border-green-300" />
+                      <span>{data?.answers.filter(a => a.answer === true).length ?? 0} compliant</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-3 h-3 rounded-full bg-red-100 border border-red-300" />
+                      <span>{data?.answers.filter(a => a.answer === false).length ?? 0} non-compliant</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-3 h-3 rounded-full bg-neutral-100 border border-neutral-300" />
+                      <span>{data?.answers.filter(a => a.answer === null).length ?? 0} not assessed</span>
+                    </div>
                   </div>
                 </div>
 
@@ -438,7 +437,7 @@ export default function AuditReport() {
           })}
         </div>
 
-        {/* AI Action Plan (shown when below threshold or generated) */}
+        {/* Action Plan (shown when below threshold or generated) */}
         {!passed && (
           <div className="mt-10 border-2 border-red-200 rounded-2xl p-8 bg-red-50">
             <div className="flex items-center gap-3 mb-4">
@@ -460,7 +459,7 @@ export default function AuditReport() {
                 className="w-full px-6 py-4 bg-red-600 text-white font-medium rounded-xl
                          hover:bg-red-700 disabled:bg-red-300 transition-colors no-print"
               >
-                {isGeneratingPlan ? 'Generating Action Plan...' : 'Generate AI Action Plan'}
+                {isGeneratingPlan ? 'Generating Action Plan...' : 'Generate Action Plan'}
               </button>
             ) : (
               <div className="space-y-4">
@@ -525,18 +524,31 @@ export default function AuditReport() {
           </button>
         </div>
 
-        {/* Footer */}
-        <footer className="mt-12 pt-6 border-t border-neutral-200 text-center text-sm text-neutral-500">
-          <p>QM7 Quality Management Audit Report</p>
-          <p className="mt-1">DPB Quality Management</p>
-          <p className="mt-1">Generated: {new Date().toLocaleDateString('en-GB', {
-            day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
-          })}</p>
-          {currentEndorsement && (
-            <p className="mt-2 font-mono text-xs bg-neutral-100 inline-block px-3 py-1 rounded">
-              Ref: {currentEndorsement.referenceNumber}
-            </p>
-          )}
+        {/* Footer / Letterhead */}
+        <footer className="mt-12 pt-6 border-t-2 border-neutral-900">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-4">
+            <div className="flex items-center gap-4">
+              <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={140} height={35} className="h-9 w-auto" />
+              <Image src="/qm7-logo-full.jpg" alt="QM7" width={80} height={35} className="h-9 w-auto rounded" />
+            </div>
+            <div className="text-left sm:text-right text-xs text-neutral-500 space-y-0.5">
+              <p className="font-medium text-neutral-700">DPB Care Consultancy</p>
+              <p>184, 200 Pensby Road, Heswall</p>
+              <p>Birkenhead, Wirral CH60 7RJ</p>
+            </div>
+          </div>
+          <div className="flex flex-col sm:flex-row sm:justify-between text-xs text-neutral-400 pt-3 border-t border-neutral-200">
+            <p>QM7 Quality Management Audit Report &middot; {new Date().toLocaleDateString('en-GB', {
+              day: 'numeric', month: 'long', year: 'numeric'
+            })}</p>
+            {currentEndorsement && (
+              <p className="font-mono">Ref: {currentEndorsement.referenceNumber}</p>
+            )}
+          </div>
+          <p className="text-[10px] text-neutral-300 mt-3">
+            &copy; {new Date().getFullYear()} DPB Care Consultancy. All rights reserved. This report is confidential
+            and intended solely for the named service. It should not be distributed without prior written consent.
+          </p>
         </footer>
       </div>
 
@@ -570,16 +582,7 @@ export default function AuditReport() {
 
               {/* DPB Logo & Branding */}
               <div className="px-8 pt-6 pb-4">
-                <div className="flex items-center gap-3 mb-1">
-                  {/* Glasses Icon */}
-                  <svg className="w-10 h-5 text-neutral-900" viewBox="0 0 48 20" fill="currentColor">
-                    <ellipse cx="12" cy="10" rx="10" ry="8" fill="none" stroke="currentColor" strokeWidth="2.5" />
-                    <ellipse cx="36" cy="10" rx="10" ry="8" fill="none" stroke="currentColor" strokeWidth="2.5" />
-                    <path d="M22 10 Q24 6 26 10" fill="none" stroke="currentColor" strokeWidth="2.5" />
-                  </svg>
-                </div>
-                <h1 className="text-2xl font-black tracking-tight text-neutral-900">DPBCARECONSULTANCY</h1>
-                <p className="text-lg tracking-[0.4em] text-neutral-700 font-light mt-0.5">Q U A L I T Y &nbsp; M A T T E R S</p>
+                <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={280} height={70} className="h-16 w-auto" />
               </div>
 
               {/* Main Body — Score Circles + QA Stamp */}
