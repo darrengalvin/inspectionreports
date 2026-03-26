@@ -145,10 +145,8 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md z-50 border-b border-neutral-100">
-        <div className="max-w-6xl mx-auto px-6 py-2 flex items-center justify-between">
-          <div className="flex items-center">
-            <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={400} height={400} className="h-20 w-auto -my-2" priority />
-          </div>
+        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+          <span className="text-base font-bold tracking-tight text-neutral-900">DPB Care Consultancy</span>
           <div className="flex items-center gap-2">
             <Link
               href="#services"
@@ -173,8 +171,9 @@ export default function Home() {
       </nav>
 
       {/* Hero */}
-      <section className="pt-32 pb-20 px-6">
+      <section className="pt-28 pb-20 px-6">
         <div className="max-w-5xl mx-auto text-center">
+          <Image src="/dpb-logo.png" alt="DPB Care Consultancy" width={400} height={400} className="h-28 w-auto mx-auto mb-6" priority />
           <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 text-sm font-medium px-4 py-1.5 rounded-full mb-8">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
